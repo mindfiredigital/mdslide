@@ -10,6 +10,12 @@
     "declarationMap": true,
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+
+    "baseUrl": ".",
+    "paths": {
+      "@mindfiredigital/mdslide-*": ["packages/*/src"]
+    },
+
+    "ignoreDeprecations": "6.0"
   }
 }
