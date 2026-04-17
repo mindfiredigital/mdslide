@@ -28,7 +28,7 @@ describe('splitSlides', () => {
     expect(result).toHaveLength(2);
   });
 
-  it('## starts a new slide and becomes its title', () => {
+  it('## starts a new slide and also becomes a new title', () => {
     const tree: Root = {
       type: 'root',
       children: [
@@ -43,7 +43,7 @@ describe('splitSlides', () => {
     expect(slide!.content[0].type).toBe('paragraph');
   });
 
-  it('# sets as main title ', () => {
+  it('# sets the main title ', () => {
     const tree: Root = {
       type: 'root',
       children: [
@@ -57,7 +57,7 @@ describe('splitSlides', () => {
     expect(result[0].title).toBe('My Presentation');
   });
 
-  it('every slide gets its own id', () => {
+  it('every slide should have its own id', () => {
     const tree: Root = {
       type: 'root',
       children: [{ type: 'thematicBreak' }, { type: 'thematicBreak' }],
