@@ -11,9 +11,8 @@
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
 
-    "baseUrl": ".",
     "paths": {
-      "@mindfiredigital/mdslide-*": ["packages/*/src"]
+      "@mindfiredigital/mdslide-*": ["./packages/*/src"]
     },
 
     "ignoreDeprecations": "5.0"
