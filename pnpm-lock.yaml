@@ -67,6 +67,16 @@ importers:
         specifier: ^25.6.0
         version: 25.6.0
 
+  packages/renderer:
+    dependencies:
+      '@mindfiredigital/mdslide-shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@types/node':
+        specifier: ^25.6.0
+        version: 25.6.0
+
   packages/shared:
     dependencies:
       gray-matter:
