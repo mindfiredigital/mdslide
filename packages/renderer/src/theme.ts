@@ -1,4 +1,4 @@
-import { BUILT_IN_THEMES } from './utils/constants.js';
+import { BUILT_IN_THEMES } from './constants/theme.constants.js';
 
 // returns invariant base layout CSS and it always injected regardless of theme
 export function baseCSS(): string {

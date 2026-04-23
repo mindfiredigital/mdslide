@@ -14,7 +14,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@mindfiredigital/mdslide-shared": "workspace:*"
+    "@mindfiredigital/mdslide-shared": "workspace:*",
+    "@mindfiredigital/mdslide-parser": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.6.0"

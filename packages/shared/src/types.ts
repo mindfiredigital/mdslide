@@ -16,6 +16,7 @@ export interface SlideNode {
   ordered?: boolean;
   url?: string;
   alt?: string;
+  header?: boolean;
 }
 
 export interface Slide {
