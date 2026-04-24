@@ -161,7 +161,7 @@ body {
   font-family: var(--slide-mono);
   font-size: 0.8rem;
   color: var(--slide-muted);
-  z-index: 150;
+  z-index: 100;
 }
 
 .notes { display: none; }
