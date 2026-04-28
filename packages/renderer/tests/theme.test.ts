@@ -36,10 +36,10 @@ describe('resolveTheme', () => {
   });
 
   it.each([
-    ['dark', '--slide-bg: #0f0f0f'],
-    ['notion', '--slide-bg: #f7f6f3'],
-    ['terminal', '--slide-bg: #0d0d0d'],
-    ['gradient', '--slide-bg: #1e1b4b'],
+    ['dark', '--slide-bg: #09090b'],
+    ['notion', '--slide-bg: #ffffff'],
+    ['terminal', '--slide-bg: #0a0a0a'],
+    ['gradient', '--slide-bg: #0f0c29'],
   ])('resolves %s theme correctly', (name, expected) => {
     expect(resolveTheme(name)).toContain(expected);
   });

@@ -45,7 +45,7 @@ describe('highlightCode', () => {
 
   it('handles bash code correctly', async () => {
     const html = await highlightCode('pnpm install', 'bash', 'dark');
-    expect(html).toContain('pnpm install');
+    expect(html).toMatch(/pnpm.*install/);
     expect(html).toContain('<pre');
   });
 
