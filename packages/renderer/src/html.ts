@@ -1,5 +1,6 @@
 import type { Slide, SlideNode, SlideDeck } from '@mindfiredigital/mdslide-shared';
 import { resolveTheme, baseCSS } from './theme.js';
+import { highlightCode } from './highlight.js';
 import { NAV_SCRIPT, DEFAULT_THEME, DEFAULT_TITLE } from './constants/html.constants.js';
 
 export interface RenderOptions {
@@ -30,9 +31,6 @@ function nodeToHtml(node: SlideNode): string {
 
     case 'inlineCode':
       return `<code>${escapeHtml(node.value ?? '')}</code>`;
-
-    case 'code':
-      return `<pre><code class="language-${node.lang ?? ''}">${escapeHtml(node.value ?? '')}</code></pre>`;
 
     case 'list':
       const tag = node.ordered ? 'ol' : 'ul';
@@ -88,11 +86,21 @@ function renderNotes(notes: string | undefined): string {
   return `<aside class="notes" hidden>${escapeHtml(notes)}</aside>`;
 }
 
-export function renderSlide(slide: Slide): string {
-  const titleHtml = slide.title ? `<h2 class="slide-title">${escapeHtml(slide.title)}</h2>` : '';
+async function renderCodeNode(node: SlideNode, theme: string): Promise<string> {
+  return highlightCode(node.value ?? '', node.lang ?? '', theme);
+}
 
-  const contentHtml = slide.content.map(nodeToHtml).join('\n');
+export async function renderSlide(slide: Slide, options: RenderOptions = {}): Promise<string> {
+  const theme = options.theme ?? DEFAULT_THEME;
+  const titleHtml = slide.title ? `<h2 class="slide-title">${escapeHtml(slide.title)}</h2>` : '';
   const notesHtml = renderNotes(slide.notes);
+
+  const contentParts = await Promise.all(
+    slide.content.map((node) =>
+      node.type === 'code' ? renderCodeNode(node, theme) : Promise.resolve(nodeToHtml(node))
+    )
+  );
+  const contentHtml = contentParts.join('\n');
 
   return `<section class="slide" data-type="${slide.type}" data-id="${slide.id}">
   ${titleHtml}
@@ -103,10 +111,13 @@ export function renderSlide(slide: Slide): string {
 </section>`;
 }
 
-export function renderDeck(result: SlideDeck, options: RenderOptions = {}): string {
+export async function renderDeck(result: SlideDeck, options: RenderOptions = {}): Promise<string> {
   const theme = options.theme ?? String(result.meta?.theme ?? DEFAULT_THEME);
   const title = String(result.meta?.title ?? DEFAULT_TITLE);
-  const slidesHtml = result.slides.map(renderSlide).join('\n');
+
+  const slidesHtml = (await Promise.all(result.slides.map((s) => renderSlide(s, { theme })))).join(
+    '\n'
+  );
 
   return `<!DOCTYPE html>
 <html lang="en">
