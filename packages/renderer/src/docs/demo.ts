@@ -4,7 +4,7 @@ import { renderDeck } from '../html.js';
 
 const md = `---
 title: InvenTrack — Inventory Management System
-theme: notion
+theme: dark
 ---
 
 # InvenTrack
@@ -37,18 +37,15 @@ Keep this slide punchy. One sentence per point max.
 
 ## System Architecture
 
-\`\`\`
-Client (React)
-    ↓
-API Gateway (Express + JWT)
-    ↓
-Service Layer
-    ├── Inventory Service
-    ├── Order Service
-    ├── Alert Service
-    └── Report Service
-    ↓
-PostgreSQL + Redis Cache
+\`\`\`mermaid
+graph TD
+  Client["Client (React)"] --> Gateway["API Gateway (Express + JWT)"]
+  Gateway --> Inventory["Inventory Service"]
+  Gateway --> Orders["Order Service"]
+  Gateway --> Alerts["Alert Service"]
+  Inventory --> DB["PostgreSQL"]
+  Orders --> DB
+  Alerts --> Cache["Redis Cache"]
 \`\`\`
 
 ## Core Data Model
@@ -83,16 +80,13 @@ interface Product {
 Walk through the flow step by step. Mention that alerts go to Slack and email.
 <!-- /notes -->
 
-\`\`\`
-Stock update received
-    ↓
-quantity < reorderPoint?
-    ↓ yes
-Alert Service triggered
-    ↓
-Notification sent (email + Slack)
-    ↓
-Draft purchase order created
+\`\`\`mermaid
+flowchart TD
+  A["Stock update received"] --> B{"quantity < reorderPoint?"}
+  B -->|yes| C["Alert Service triggered"]
+  C --> D["Notification sent (email + Slack)"]
+  D --> E["Draft purchase order created"]
+  B -->|no| F["No action"]
 \`\`\`
 
 ## Tech Stack
@@ -127,12 +121,35 @@ Emphasise the audit trail here — compliance teams love this.
 - Rate limiting on all public endpoints
 - Data encrypted at rest and in transit
 
+## API Example
+
+\`\`\`ts
+// GET /api/products?lowStock=true
+const response = await fetch('/api/products?lowStock=true', {
+  headers: { Authorization: \`Bearer \${token}\` },
+});
+
+const { products } = await response.json();
+// returns products where quantity < reorderPoint
+\`\`\`
+
+## Deployment Pipeline
+
+\`\`\`mermaid
+flowchart LR
+  Dev["Developer Push"] --> CI["GitHub Actions CI"]
+  CI --> Test["Run Tests"]
+  Test --> Build["Docker Build"]
+  Build --> Registry["Container Registry"]
+  Registry --> Prod["Production Deploy"]
+\`\`\`
+
 ## Roadmap
 
 <!-- layout: bullets -->
 
 -  **v1.0** — Core inventory CRUD + auth
--  **v1.1** — Multi-location support
+- **v1.1** — Multi-location support
 -  **v1.2** — Barcode scanning + mobile app
 -  **v1.3** — Supplier portal + purchase orders
 -  **v2.0** — AI-powered demand forecasting
@@ -157,15 +174,16 @@ pnpm add @mindfiredigital/inventrack
 
 **github.com/mindfiredigital/mdslide**
 `;
+
 const deck = parse(md);
 
 (async () => {
   try {
     const html = await renderDeck(deck, { theme: 'dark' });
     writeFileSync('demo.html', html);
-    console.log(`wrote demo.html — ${deck.slides.length} slides`);
+    console.log(` wrote demo.html — ${deck.slides.length} slides`);
   } catch (error) {
-    console.error('Failed to render deck:', error);
+    console.error(' Failed to render deck:', error);
     process.exit(1);
   }
 })();

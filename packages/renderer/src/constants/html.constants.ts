@@ -25,7 +25,27 @@ export const NAV_SCRIPT = `
     show(current);
   });
 
-  show(0);
+  function init() {
+    if (typeof mermaid === 'undefined') {
+      setTimeout(init, 50);
+      return;
+    }
+
+    slides.forEach(function (s) { s.style.display = 'flex'; });
+
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+
+    mermaid.run({
+      querySelector: '.mermaid',
+    }).then(function () {
+      // after mermaid finishes, hide all slides and show only the first
+      show(0);
+    }).catch(function () {
+      show(0);
+    });
+  }
+
+  init();
 }());
 </script>`;
 

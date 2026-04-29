@@ -131,6 +131,7 @@ export async function renderDeck(result: SlideDeck, options: RenderOptions = {})
   <title>${escapeHtml(title)}</title>
   <style id="mdslide-base">${baseCSS()}</style>
   <style id="mdslide-theme">${resolveTheme(theme)}</style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
 <body>
   <div class="deck">

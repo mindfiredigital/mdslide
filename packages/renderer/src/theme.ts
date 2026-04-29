@@ -1,6 +1,5 @@
 import { BUILT_IN_THEMES } from './constants/theme.constants.js';
 
-// returns invariant base layout CSS and it always injected regardless of theme
 export function baseCSS(): string {
   return `
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,11 +29,7 @@ body {
   gap: 1.5rem;
 }
 
-.slide[data-type="title"] {
-  align-items: center;
-  text-align: center;
-}
-
+.slide[data-type="title"],
 .slide[data-type="statement"] {
   align-items: center;
   text-align: center;
@@ -56,6 +51,7 @@ body {
   font-size: 1.15rem;
   line-height: 1.7;
   color: var(--slide-text);
+  overflow: hidden;
 }
 
 .slide-content p { margin-bottom: 0.75rem; }
@@ -118,12 +114,29 @@ body {
   max-height: 60vh;
   border-radius: var(--slide-radius);
 }
+.mermaid {
+  background: transparent;
+  padding: 0;
+  width: 100%;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  max-height: 65vh;
+}
+
+.slide[data-type="diagram"] .slide-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 [data-theme="light"] {
   --slide-bg: #ffffff;
   --slide-text: #1a1a1a;
   --slide-accent: #2563eb;
   --slide-muted: #6b7280;
-}  
+}
 
 [data-theme="dark"] {
   --slide-bg: #0f0f0f;
@@ -131,7 +144,7 @@ body {
   --slide-accent: #818cf8;
   --slide-muted: #9ca3af;
 }
-  
+
 [data-theme="notion"] {
   --slide-bg: #f7f6f3;
   --slide-text: #37352f;
@@ -145,7 +158,6 @@ body {
   --slide-accent: #00ff41;
   --slide-muted: #005f1a;
 }
- 
 
 [data-theme="gradient"] {
   --slide-bg: #1e1b4b;
