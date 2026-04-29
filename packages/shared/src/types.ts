@@ -6,7 +6,8 @@ export type SlideType =
   | 'visual'
   | 'table'
   | 'quote'
-  | 'statement';
+  | 'statement'
+  | 'diagram';
 
 export interface SlideNode {
   type: string;

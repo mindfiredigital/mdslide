@@ -157,9 +157,15 @@ pnpm add @mindfiredigital/inventrack
 
 **github.com/mindfiredigital/mdslide**
 `;
-
 const deck = parse(md);
-const html = renderDeck(deck, { theme: 'gradient' });
 
-writeFileSync('demo.html', html);
-console.log(`wrote demo.html — ${deck.slides.length} slides`);
+(async () => {
+  try {
+    const html = await renderDeck(deck, { theme: 'dark' });
+    writeFileSync('demo.html', html);
+    console.log(`wrote demo.html — ${deck.slides.length} slides`);
+  } catch (error) {
+    console.error('Failed to render deck:', error);
+    process.exit(1);
+  }
+})();

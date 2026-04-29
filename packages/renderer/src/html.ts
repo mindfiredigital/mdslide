@@ -1,6 +1,7 @@
 import type { Slide, SlideNode, SlideDeck } from '@mindfiredigital/mdslide-shared';
 import { resolveTheme, baseCSS } from './theme.js';
 import { highlightCode } from './highlight.js';
+import { renderMermaid } from './mermaid.js';
 import { NAV_SCRIPT, DEFAULT_THEME, DEFAULT_TITLE } from './constants/html.constants.js';
 
 export interface RenderOptions {
@@ -87,6 +88,9 @@ function renderNotes(notes: string | undefined): string {
 }
 
 async function renderCodeNode(node: SlideNode, theme: string): Promise<string> {
+  if (node.lang === 'mermaid') {
+    return renderMermaid(node.value ?? '');
+  }
   return highlightCode(node.value ?? '', node.lang ?? '', theme);
 }
 

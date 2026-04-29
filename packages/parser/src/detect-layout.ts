@@ -8,6 +8,11 @@ export function detectLayout(slide: Slide): Slide {
       type: slide.layoutOverride as SlideType,
     };
   }
+
+  // diagram for mermaid code block
+  const hasMermaid = slide.content.some((item) => item.type === 'code' && item.lang === 'mermaid');
+  if (hasMermaid) return { ...slide, type: 'diagram' };
+
   //covert to bullet
   const hasList = slide.content.some((item) => item.type === 'list');
 
