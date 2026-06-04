@@ -32,7 +32,7 @@ export function extractSlideNotes(nodes: RootContent[]): ParseNotesResult {
   }
 
   return {
-    notes,
+    notes: notes || undefined,
     remainingNodes,
   };
 }
