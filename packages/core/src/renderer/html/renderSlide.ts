@@ -77,3 +77,8 @@ export function nodeToHtml(node: SlideNode): string {
       return '';
   }
 }
+
+export function renderNotes(notes: string | undefined): string {
+  if (!notes) return '';
+  return `<aside class="notes" hidden>${sanitizeHtml(notes)}</aside>`;
+}
