@@ -41,3 +41,5 @@ export const SUPPORTED_LANGS = [
   'yaml',
   'yml',
 ];
+
+export const DEFAULT_TITLE = 'Presentation';
