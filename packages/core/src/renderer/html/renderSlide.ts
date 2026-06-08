@@ -82,3 +82,33 @@ export function renderNotes(notes: string | undefined): string {
   if (!notes) return '';
   return `<aside class="notes" hidden>${sanitizeHtml(notes)}</aside>`;
 }
+
+function findImageNode(nodes: SlideNode[]): SlideNode | null {
+  for (const node of nodes) {
+    if (node.type === 'image') {
+      return node;
+    }
+    if (node.children) {
+      const img = findImageNode(node.children);
+      if (img) return img;
+    }
+  }
+  return null;
+}
+
+function removeImageNode(nodes: SlideNode[]): SlideNode[] {
+  return nodes
+    .map((node) => {
+      if (node.type === 'image') {
+        return null;
+      }
+      if (node.children) {
+        return {
+          ...node,
+          children: removeImageNode(node.children),
+        };
+      }
+      return node;
+    })
+    .filter((n): n is SlideNode => n !== null);
+}
