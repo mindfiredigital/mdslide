@@ -112,3 +112,59 @@ function removeImageNode(nodes: SlideNode[]): SlideNode[] {
     })
     .filter((n): n is SlideNode => n !== null);
 }
+
+export function renderSlide(slide: Slide): string {
+  const titleHtml = slide.title ? `<h2 class="slideTitle">${sanitizeHtml(slide.title)}</h2>` : '';
+  const notesHtml = renderNotes(slide.notes);
+
+  let contentHtml = '';
+  if (slide.type === 'split') {
+    const isManualSplit =
+      slide.content.length === 2 &&
+      slide.content[0].type === 'column' &&
+      slide.content[1].type === 'column';
+    if (isManualSplit) {
+      const leftHtml = nodeToHtml(slide.content[0]);
+      const rightHtml = nodeToHtml(slide.content[1]);
+
+      contentHtml = `
+      <div class="splitLayout">
+        <div class="splitColumn textColumn">
+          ${leftHtml}
+        </div>
+        <div class="splitColumn rightColumn">
+          ${rightHtml}
+        </div>
+      </div>`;
+    } else {
+      const imageNode = findImageNode(slide.content);
+      if (imageNode) {
+        const textNodes = removeImageNode(slide.content);
+        const textHtml = textNodes.map(nodeToHtml).join('\n');
+        const imageHtml = nodeToHtml(imageNode);
+
+        contentHtml = `
+        <div class="splitLayout">
+          <div class="splitColumn textColumn">
+            ${textHtml}
+          </div>
+          <div class="splitColumn imageColumn">
+            ${imageHtml}
+          </div>
+        </div>`;
+      } else {
+        contentHtml = slide.content.map(nodeToHtml).join('\n');
+      }
+    }
+  } else {
+    contentHtml = slide.content.map(nodeToHtml).join('\n');
+  }
+
+  return `<section class="slide" data-type="${slide.type}" data-id="${slide.id}">
+  ${titleHtml}
+  <div class="slideContent">
+    ${contentHtml}
+  </div>
+  ${notesHtml}
+</section>`;
+}
