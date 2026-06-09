@@ -19,6 +19,21 @@
         "vitest": "^4.1.0",
       },
     },
+    "packages/core": {
+      "name": "@mindfiredigital/mdslide-core",
+      "version": "0.0.1",
+      "dependencies": {
+        "@mindfiredigital/mdslide-shared": "workspace:*",
+        "gray-matter": "^4.0.3",
+        "remark-gfm": "^4.0.1",
+        "remark-parse": "^11.0.0",
+        "unified": "^11.0.5",
+      },
+      "devDependencies": {
+        "@types/mdast": "^4.0.4",
+        "@types/node": "^25.6.0",
+      },
+    },
     "packages/parser": {
       "name": "@mindfiredigital/mdslide-parser",
       "version": "0.0.1",
@@ -136,6 +151,8 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.5", "", {}, "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
+
+    "@mindfiredigital/mdslide-core": ["@mindfiredigital/mdslide-core@workspace:packages/core"],
 
     "@mindfiredigital/mdslide-parser": ["@mindfiredigital/mdslide-parser@workspace:packages/parser"],
 
