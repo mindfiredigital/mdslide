@@ -1,5 +1,4 @@
 import { RootContent } from 'mdast';
-import { extractTextFromNode } from '../ast/extractTextFromNode.js';
 import { VALID_SLIDE_TYPES } from '../constants/index.js';
 import { SlideNode, SlideType } from '@mindfiredigital/mdslide-shared';
 
