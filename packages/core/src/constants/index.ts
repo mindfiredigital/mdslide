@@ -43,3 +43,5 @@ export const SUPPORTED_LANGS = [
 ];
 
 export const DEFAULT_TITLE = 'Presentation';
+
+export const DEFAULT_THEME = 'light';
