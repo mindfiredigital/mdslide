@@ -80,6 +80,44 @@ export function renderDeck(deck: SlideDeck, options: RenderDeckOptions = {}): st
     [data-theme="gradient"] .line-numbers-rows {
       border-right: 1px solid rgba(255,255,255,0.15) !important;
     }
+
+    @media print {
+      @page {
+        size: 1920px 1080px;
+        margin: 0;
+      }
+      body {
+        background: var(--slide-bg) !important;
+        color: var(--slide-text) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        overflow: visible !important;
+        height: auto !important;
+      }
+      .deck {
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .slide {
+        position: relative !important;
+        display: flex !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transform: none !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        height: 1080px !important;
+        width: 1920px !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        border: none !important;
+        float: none !important;
+      }
+      .dokContainer,
+      .progressBarContainer {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
