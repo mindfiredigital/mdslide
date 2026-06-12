@@ -1,3 +1,4 @@
+import { presentorWindow } from './presentorWindow.js';
 export const script = `
 
 <script>
@@ -9,8 +10,10 @@ export const script = `
   const btnPrev = document.getElementById('dokPrev');
   const btnNext = document.getElementById('dokNext');
   const btnFullscreen = document.getElementById('dokFullscreen');
+  const btnPresenter = document.getElementById('dokPresenter');
 
   let current = 0;
+  let presenterWindow = null;
 
   function show(index) {
     slides.forEach(function (s, i) {
@@ -60,6 +63,9 @@ export const script = `
     if (hudCounter) {
       hudCounter.textContent = index + 1 + ' / ' + slides.length;
     }
+
+    // Update presenter view if open
+    updatePresenterContent();
   }
 
   // Hndler of next slide
@@ -84,7 +90,93 @@ export const script = `
       document.exitFullscreen();
     }
   }
-  
+
+  // Handler of presenter window toggling
+  function togglePresenterWindow() {
+    if (presenterWindow && !presenterWindow.closed) {
+      presenterWindow.close();
+      presenterWindow = null;
+      return;
+    }
+
+    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+      .map(function(el) { return el.outerHTML; })
+      .join('\\n');
+
+    presenterWindow = window.open('', 'mdslide-presenter-' + Date.now(), 'width=1700,height=800');
+    if (!presenterWindow) {
+      alert('Pop-up blocked! Please allow pop-ups to open the Presenter View.');
+      return;
+    }
+
+    presenterWindow.document.write(\`
+    ${presentorWindow}
+\`);
+    presenterWindow.document.close();
+
+    // Call update on open
+    updatePresenterContent();
+  }
+
+  function updatePresenterContent() {
+    if (!presenterWindow || presenterWindow.closed) return;
+
+    const currentSlide = slides[current];
+    const nextSlide = slides[current + 1];
+
+    const currentPreview = presenterWindow.document.getElementById('current-preview');
+    const nextPreview = presenterWindow.document.getElementById('next-preview');
+    const notesContent = presenterWindow.document.getElementById('notes-content');
+
+    if (currentPreview && currentSlide) {
+      const clone = currentSlide.cloneNode(true);
+      clone.classList.add('active');
+      clone.classList.remove('past');
+      clone.style.transform = 'none';
+      clone.style.opacity = '1';
+      currentPreview.innerHTML = '';
+      currentPreview.appendChild(clone);
+    }
+
+    if (nextPreview) {
+      if (nextSlide) {
+        const clone = nextSlide.cloneNode(true);
+        clone.classList.add('active');
+        clone.classList.remove('past');
+        clone.style.transform = 'none';
+        clone.style.opacity = '1';
+        nextPreview.innerHTML = '';
+        nextPreview.appendChild(clone);
+      } else {
+        nextPreview.innerHTML = '<div class="no-next">End of Presentation</div>';
+      }
+    }
+
+    if (notesContent) {
+      const notesElement = currentSlide.querySelector('.notes');
+      if (notesElement && notesElement.textContent.trim()) {
+        notesContent.innerHTML = notesElement.innerHTML;
+      } else {
+        notesContent.innerHTML = '<em style="color: #666;">No speaker notes for this slide.</em>';
+      }
+    }
+
+    if (presenterWindow.scalePreviews) {
+      presenterWindow.scalePreviews();
+    }
+  }
+
+  // Handle messages from presenter window
+  window.addEventListener('message', function (e) {
+    if (e.data === 'next') {
+      nextSlide();
+    } else if (e.data === 'prev') {
+      prevSlide();
+    } else if (e.data === 'togglePresenter') {
+      togglePresenterWindow();
+    }
+  });
+
   // Navigation of keyBoard
   document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowRight' || e.key === ' ') {
@@ -93,13 +185,16 @@ export const script = `
       prevSlide();
     } else if (e.key === 'f') {
       toggleFullscreen();
-    } 
+    } else if (e.key === 'p' || e.key === 'P') {
+      togglePresenterWindow();
+    }
   });
 
   // Floating DOK Display Vislibility on Mouse Move
   if (btnPrev) btnPrev.addEventListener('click', prevSlide);
   if (btnNext) btnNext.addEventListener('click', nextSlide);
   if (btnFullscreen) btnFullscreen.addEventListener('click', toggleFullscreen);
+  if (btnPresenter) btnPresenter.addEventListener('click', togglePresenterWindow);
 
   // Floating DOK Display Visibility on Mouse Move
   let hudTimeout;

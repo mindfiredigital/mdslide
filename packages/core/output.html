@@ -308,44 +308,6 @@ body.showDok .dokContainer,
   padding: 0 0.5rem;
   color: var(--slide-text);
 }
-
-@media print {
-  @page {
-    size: 1920px 1080px;
-    margin: 0;
-  }
-  body {
-    background: var(--slide-bg) !important;
-    color: var(--slide-text) !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    overflow: visible !important;
-    height: auto !important;
-  }
-  .deck {
-    height: auto !important;
-    overflow: visible !important;
-  }
-  .slide {
-    position: relative !important;
-    display: flex !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    transform: none !important;
-    page-break-after: always !important;
-    break-after: page !important;
-    height: 1080px !important;
-    width: 1920px !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-    border: none !important;
-    float: none !important;
-  }
-  .dokContainer,
-  .progressBarContainer {
-    display: none !important;
-  }
-}
 </style>
   <style id="mdslideTheme">
 :root {
@@ -422,28 +384,28 @@ body {
 </head>
 <body>
   <div class="deck">
-<section class="slide" data-type="title" data-id="aa37a5f1-f4ad-4faf-bb48-da0d9e3c7ff5">
+<section class="slide" data-type="title" data-id="c97c8afc-74ea-4701-95aa-aecadf364beb">
   <h2 class="slideTitle">Welcome to MdSlide!</h2>
   <div class="slideContent">
     
   </div>
   
 </section>
-<section class="slide" data-type="content" data-id="fa83c363-27d1-4d2d-8850-bd3f24542b1d">
+<section class="slide" data-type="content" data-id="4db8016e-ca00-41e4-94a5-87cfeda244f4">
   <h2 class="slideTitle">The Premium Markdown Presentation Compiler</h2>
   <div class="slideContent">
     <p>Sobhan Sahoo | May 2026</p>
   </div>
   
 </section>
-<section class="slide" data-type="quote" data-id="4b888ee5-b7d4-4863-ae4b-a6cb2759d97b">
+<section class="slide" data-type="quote" data-id="06efa8de-61c4-4913-b49e-b8a9d9399899">
   <h2 class="slideTitle">Focus on Content</h2>
   <div class="slideContent">
     <blockquote><p>&quot;MdSlide transforms simple Markdown into premium, responsive, high-fidelity slides automatically.&quot;</p></blockquote>
   </div>
   
 </section>
-<section class="slide" data-type="split" data-id="993ff9ce-9848-4312-9d51-d432ae405601">
+<section class="slide" data-type="split" data-id="178d3702-773f-4f8f-a99a-2d6ff26aea0c">
   <h2 class="slideTitle">Premium Split Columns</h2>
   <div class="slideContent">
     
@@ -458,9 +420,9 @@ body {
           </div>
         </div>
   </div>
-  <aside class="notes" hidden>This is a speaker note for slide 1.This is a speaker note for slide 2.This is a speaker note for slide 3.This is a speaker note for slide 4.This is a speaker note for slide 5.This is a speaker note for slide 6.This is a speaker note for slide 7.This is a speaker note for slide 8.This is a speaker note for slide 9.</aside>
+  
 </section>
-<section class="slide" data-type="split" data-id="e2fbcc74-10fb-402c-809e-cd43762f491b">
+<section class="slide" data-type="split" data-id="2eca5058-3a08-4784-befb-2cc6ea18ab68">
   <h2 class="slideTitle">Custom Split Columns</h2>
   <div class="slideContent">
     
@@ -478,7 +440,7 @@ console.log('Deck compiled successfully!');</code></pre>
   </div>
   
 </section>
-<section class="slide" data-type="split" data-id="5c9fd706-5fa2-4cdd-aecc-2a0e5224213f">
+<section class="slide" data-type="split" data-id="f6822a7c-f0bd-4050-a498-6f898005fe18">
   <h2 class="slideTitle">Beautiful Code Highlighting</h2>
   <div class="slideContent">
     
@@ -511,7 +473,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="bullets" data-id="7f93a886-5557-41b0-8069-9be54040b0da">
+<section class="slide" data-type="bullets" data-id="3057d9f2-11f5-4155-8480-64bf716aad77">
   <h2 class="slideTitle">Rich Markdown Features</h2>
   <div class="slideContent">
     Inline Elements &amp; formatting
@@ -520,7 +482,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="table" data-id="1d30930d-4d2d-4aa0-9288-e1bbf539cdaf">
+<section class="slide" data-type="table" data-id="ce2f9c61-7107-4fef-9036-aae7d625eb4b">
   <h2 class="slideTitle">Comparison Grid</h2>
   <div class="slideContent">
     Clean Feature Matrix
@@ -528,7 +490,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="bullets" data-id="0b0e2e24-1ad9-416a-b6e8-530eb3c92699">
+<section class="slide" data-type="bullets" data-id="eff57199-741d-4e69-99a0-cf366760ee3a">
   <h2 class="slideTitle">Overflow Engine Test</h2>
   <div class="slideContent">
     Verifying Heuristic Splitting
@@ -537,7 +499,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="bullets" data-id="f8c8e812-a6cb-4963-8179-5c0638af6d59">
+<section class="slide" data-type="bullets" data-id="fb97e3ba-84c3-423b-a9f7-627cda0535ba">
   <h2 class="slideTitle">Stacking Multiple Images</h2>
   <div class="slideContent">
     Visual Stacking Layout (2 Images)
@@ -545,7 +507,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="bullets" data-id="f8c8e812-a6cb-4963-8179-5c0638af6d59-cont-p1">
+<section class="slide" data-type="bullets" data-id="fb97e3ba-84c3-423b-a9f7-627cda0535ba-cont-p1">
   <h2 class="slideTitle">Stacking Multiple Images (Cont.)</h2>
   <div class="slideContent">
     <ul><li><p><strong>Image 1 (Tech Setup):</strong>
@@ -554,7 +516,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="split" data-id="a6b7719d-7ce4-4280-bc4a-74662a7ac234">
+<section class="slide" data-type="split" data-id="67fa4fd5-4064-481b-8b4e-41282506ddaf">
   <h2 class="slideTitle">Deeply Nested Images</h2>
   <div class="slideContent">
     
@@ -571,7 +533,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="bullets" data-id="5ee6fa1b-2836-4c4b-bd98-3d27b747e7a1">
+<section class="slide" data-type="bullets" data-id="562e5cff-03a5-4b36-bd6a-57c045534053">
   <h2 class="slideTitle">Image Overflow Stress Test</h2>
   <div class="slideContent">
     Dense content with multiple heavy nodes
@@ -579,7 +541,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="bullets" data-id="5ee6fa1b-2836-4c4b-bd98-3d27b747e7a1-cont-p1">
+<section class="slide" data-type="bullets" data-id="562e5cff-03a5-4b36-bd6a-57c045534053-cont-p1">
   <h2 class="slideTitle">Image Overflow Stress Test (Cont.)</h2>
   <div class="slideContent">
     <ul><li><p><strong>First Phase:</strong> Designing user interface frames and setting style tokens.</p></li><li><p><strong>Second Phase:</strong> Building interactive web component wrappers.</p></li><li><p><strong>Image 1 (Team Board):</strong>
@@ -588,7 +550,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="content" data-id="95bfa790-bc2e-40fb-afdf-883045b42670">
+<section class="slide" data-type="content" data-id="0a852717-75f0-41b8-b58a-29316428a2ad">
   <h2 class="slideTitle">Ultimate Code Splitter Blast Test</h2>
   <div class="slideContent">
     Extremely long program segment (70 lines of code)
@@ -628,7 +590,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="content" data-id="95bfa790-bc2e-40fb-afdf-883045b42670-cont-p1">
+<section class="slide" data-type="content" data-id="0a852717-75f0-41b8-b58a-29316428a2ad-cont-p1">
   <h2 class="slideTitle">Ultimate Code Splitter Blast Test (Cont.)</h2>
   <div class="slideContent">
     <pre class="lineNumbers language-typescript"><code class="language-typescript">      } else if (token.startsWith('-')) {
@@ -656,7 +618,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="table" data-id="5ce57020-a98f-48c3-abf8-83484222d170">
+<section class="slide" data-type="table" data-id="b74e7ce7-30c6-4a46-b425-354663189d49">
   <h2 class="slideTitle">Complex Matrix Table Blast Test</h2>
   <div class="slideContent">
     Highly detailed feature comparison board
@@ -665,7 +627,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="bullets" data-id="84182b6e-a32d-4e06-ab59-56c2fe3b6566">
+<section class="slide" data-type="bullets" data-id="545f505d-2209-4afc-b934-0c195db2afd6">
   <h2 class="slideTitle">Extremely Nested Lists Blast Test</h2>
   <div class="slideContent">
     Nested list indentation stress test
@@ -673,14 +635,14 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="bullets" data-id="84182b6e-a32d-4e06-ab59-56c2fe3b6566-cont-p1">
+<section class="slide" data-type="bullets" data-id="545f505d-2209-4afc-b934-0c195db2afd6-cont-p1">
   <h2 class="slideTitle">Extremely Nested Lists Blast Test (Cont.)</h2>
   <div class="slideContent">
     <ul><li><p><strong>Core Level 1 Item</strong></p><ul><li><p>Sub-Level 2 Item (with nested elements)</p><ul><li><p>Sub-Level 3 Item (with inline tags: <code>const nested = true</code>)</p><ul><li><p><strong>Sub-Level 4 Item (Giga Deep!):</strong> This is nested four levels deep, demonstrating how theme left-padding styles behave!</p></li><li><p>Another Sub-Level 4 bullet item to verify stack breathing room.</p></li></ul></li><li><p>Back to Level 3 Bullet point.</p></li></ul></li><li><p>Level 2 secondary bullet point.</p></li></ul></li><li><p><strong>Core Level 1 Secondary Item</strong></p><ul><li><p>Secondary Sub-Level 2 item.</p></li></ul></li></ul>
   </div>
   
 </section>
-<section class="slide" data-type="split" data-id="4cba87ab-458d-4472-91f0-c58ddaf6a601">
+<section class="slide" data-type="split" data-id="9ff09edc-aa25-443a-8f5f-3edd82fb9f6c">
   <h2 class="slideTitle">Giant Split Layout Overflow Blast Test</h2>
   <div class="slideContent">
     Overflowing a side-by-side split layout
@@ -689,7 +651,7 @@ class TextIgniter {
   </div>
   
 </section>
-<section class="slide" data-type="split" data-id="4cba87ab-458d-4472-91f0-c58ddaf6a601-cont-p1">
+<section class="slide" data-type="split" data-id="9ff09edc-aa25-443a-8f5f-3edd82fb9f6c-cont-p1">
   <h2 class="slideTitle">Giant Split Layout Overflow Blast Test (Cont.)</h2>
   <div class="slideContent">
     
@@ -721,6 +683,10 @@ class TextIgniter {
     <button id="dokNext" class="dokBtn" title="Next Slide">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
     </button>
+
+    <button id="dokPresenter" class="dokBtn" title="Monitor">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+    </button>
     
     <button id="dokFullscreen" class="dokBtn" title="Toggle Fullscreen (F)">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
@@ -741,8 +707,10 @@ class TextIgniter {
   const btnPrev = document.getElementById('dokPrev');
   const btnNext = document.getElementById('dokNext');
   const btnFullscreen = document.getElementById('dokFullscreen');
+  const btnPresenter = document.getElementById('dokPresenter');
 
   let current = 0;
+  let presenterWindow = null;
 
   function show(index) {
     slides.forEach(function (s, i) {
@@ -792,6 +760,9 @@ class TextIgniter {
     if (hudCounter) {
       hudCounter.textContent = index + 1 + ' / ' + slides.length;
     }
+
+    // Update presenter view if open
+    updatePresenterContent();
   }
 
   // Hndler of next slide
@@ -817,7 +788,263 @@ class TextIgniter {
     }
   }
 
+  // Handler of presenter window toggling
+  function togglePresenterWindow() {
+    if (presenterWindow && !presenterWindow.closed) {
+      presenterWindow.close();
+      presenterWindow = null;
+      return;
+    }
+
+    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+      .map(function(el) { return el.outerHTML; })
+      .join('\n');
+
+    presenterWindow = window.open('', 'mdslide-presenter-' + Date.now(), 'width=1700,height=800');
+    if (!presenterWindow) {
+      alert('Pop-up blocked! Please allow pop-ups to open the Presenter View.');
+      return;
+    }
+
+    presenterWindow.document.write(`
+    
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Presenter View - MdSlide</title>
+  ${styles}
   
+    <style>
+        body {
+            margin: 0;
+            padding: 15px;
+            background: #111;
+            color: #eee;
+            font-family: system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            grid-template-rows: 1.2fr 1fr;
+            gap: 15px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .panel {
+            border-radius: 10px;
+            border: 1px solid #2c2c2e;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        .panel-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #98989d;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .preview-container {
+            flex-grow: 1;
+            position: relative;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #current-panel {
+            grid-row: span 2;
+        }
+        #current-preview, #next-preview {
+            width: 1920px;
+            height: 1080px;
+            transform-origin: top left;
+            background: var(--slide-bg);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #notes-panel {
+            background: #1c1c1e;
+        }
+        #notes-content {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            overflow-y: auto;
+            color: #eaeaea;
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+        .slide {
+            position: absolute !important;
+            opacity: 1 !important;
+            transform: none !important;
+            pointer-events: none !important;
+            width: 1920px !important;
+            height: 1080px !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+        .no-next {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #636366;
+            height: 100%;
+            font-size: 1.5rem;
+            font-weight: 500;
+            background: #1c1c1e;
+        }
+        #notes-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        #notes-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #notes-content::-webkit-scrollbar-thumb {
+            background: #3a3a3c;
+            border-radius: 3px;
+        }
+  <\/style>
+
+<\/head>
+<body>
+  <div class="panel" id="current-panel">
+    <div class="panel-title">Current Slide</div>
+    <div class="preview-container">
+      <div id="current-preview"></div>
+    </div>
+  </div>
+  <div class="panel" id="next-panel">
+    <div class="panel-title">Next Slide</div>
+    <div class="preview-container">
+      <div id="next-preview"></div>
+    </div>
+  </div>
+  <div class="panel" id="notes-panel">
+    <div class="panel-title">Speaker Notes</div>
+    <div id="notes-content"></div>
+  </div>
+
+  <script>
+    
+
+function scalePreviews() {
+  const currContainer = document
+    .getElementById('current-panel')
+    .querySelector('.preview-container');
+  const nextContainer = document.getElementById('next-panel').querySelector('.preview-container');
+
+  const currPreview = document.getElementById('current-preview');
+  const nextPreview = document.getElementById('next-preview');
+
+  if (currContainer && currPreview) {
+    const w = currContainer.clientWidth;
+    const h = currContainer.clientHeight;
+    const scale = Math.min(w / 1920, h / 1080);
+    currPreview.style.transform = 'scale(' + scale + ')';
+  }
+
+  if (nextContainer && nextPreview) {
+    const w = nextContainer.clientWidth;
+    const h = nextContainer.clientHeight;
+    const scale = Math.min(w / 1920, h / 1080);
+    nextPreview.style.transform = 'scale(' + scale + ')';
+  }
+}
+
+window.scalePreviews = scalePreviews;
+window.addEventListener('resize', scalePreviews);
+
+// Forward keyboard navigation to main window
+window.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') {
+    window.opener.postMessage('next', '*');
+  } else if (e.key === 'ArrowLeft') {
+    window.opener.postMessage('prev', '*');
+  } else if (e.key === 'p' || e.key === 'P') {
+    window.opener.postMessage('togglePresenter', '*');
+  }
+});
+
+// Run initial scaling
+setTimeout(scalePreviews, 100);
+
+
+
+  <\/script>
+<\/body>
+<\/html>
+
+
+`);
+    presenterWindow.document.close();
+
+    // Call update on open
+    updatePresenterContent();
+  }
+
+  function updatePresenterContent() {
+    if (!presenterWindow || presenterWindow.closed) return;
+
+    const currentSlide = slides[current];
+    const nextSlide = slides[current + 1];
+
+    const currentPreview = presenterWindow.document.getElementById('current-preview');
+    const nextPreview = presenterWindow.document.getElementById('next-preview');
+    const notesContent = presenterWindow.document.getElementById('notes-content');
+
+    if (currentPreview && currentSlide) {
+      const clone = currentSlide.cloneNode(true);
+      clone.classList.add('active');
+      clone.classList.remove('past');
+      clone.style.transform = 'none';
+      clone.style.opacity = '1';
+      currentPreview.innerHTML = '';
+      currentPreview.appendChild(clone);
+    }
+
+    if (nextPreview) {
+      if (nextSlide) {
+        const clone = nextSlide.cloneNode(true);
+        clone.classList.add('active');
+        clone.classList.remove('past');
+        clone.style.transform = 'none';
+        clone.style.opacity = '1';
+        nextPreview.innerHTML = '';
+        nextPreview.appendChild(clone);
+      } else {
+        nextPreview.innerHTML = '<div class="no-next">End of Presentation</div>';
+      }
+    }
+
+    if (notesContent) {
+      const notesElement = currentSlide.querySelector('.notes');
+      if (notesElement && notesElement.textContent.trim()) {
+        notesContent.innerHTML = notesElement.innerHTML;
+      } else {
+        notesContent.innerHTML = '<em style="color: #666;">No speaker notes for this slide.</em>';
+      }
+    }
+
+    if (presenterWindow.scalePreviews) {
+      presenterWindow.scalePreviews();
+    }
+  }
+
+  // Handle messages from presenter window
+  window.addEventListener('message', function (e) {
+    if (e.data === 'next') {
+      nextSlide();
+    } else if (e.data === 'prev') {
+      prevSlide();
+    } else if (e.data === 'togglePresenter') {
+      togglePresenterWindow();
+    }
+  });
+
   // Navigation of keyBoard
   document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowRight' || e.key === ' ') {
@@ -826,13 +1053,16 @@ class TextIgniter {
       prevSlide();
     } else if (e.key === 'f') {
       toggleFullscreen();
-    } 
+    } else if (e.key === 'p' || e.key === 'P') {
+      togglePresenterWindow();
+    }
   });
 
   // Floating DOK Display Vislibility on Mouse Move
   if (btnPrev) btnPrev.addEventListener('click', prevSlide);
   if (btnNext) btnNext.addEventListener('click', nextSlide);
   if (btnFullscreen) btnFullscreen.addEventListener('click', toggleFullscreen);
+  if (btnPresenter) btnPresenter.addEventListener('click', togglePresenterWindow);
 
   // Floating DOK Display Visibility on Mouse Move
   let hudTimeout;
