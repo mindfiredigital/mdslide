@@ -6,10 +6,27 @@ import { processOverflow } from '../overflow/index.js';
 import { renderDeck } from '../renderer/html/index.js';
 import { CompileOptions, CompileResult } from '../interfaces/index.js';
 
+// Safe Formatter Parser
+function safeParseFrontmatter(markdown: string): ReturnType<typeof parseFrontmatter> {
+  try {
+    return parseFrontmatter(markdown);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn(
+      `[mdslide] Warning: Failed to parse frontmatter   falling back to defaults.\n` +
+        `  Reason: ${message}\n` +
+        `  Tip: Check your YAML block between the --- markers at the top of the file.`
+    );
+    const stripped = markdown.replace(/^---[\r\n][\s\S]*?[\r\n]---[\r\n]?/, '');
+    return { meta: {}, content: stripped };
+  }
+}
+
+// Compiler
 export class Compiler {
   compile(markdown: string, options: CompileOptions = {}): CompileResult {
-    // Parse Markdown metadata frontmatter
-    const { meta, content } = parseFrontmatter(markdown);
+    // Parse frontmatter with error boundary   never crashes on bad YAML
+    const { meta, content } = safeParseFrontmatter(markdown);
 
     // Parse Markdown string to MDAST and group by slide dividers
     const { slides: rawBlocks } = parseMarkdown(content);
