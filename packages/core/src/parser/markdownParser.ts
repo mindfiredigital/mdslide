@@ -1,6 +1,4 @@
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm';
+import { parseMarkdownToAST } from '@mindfiredigital/mdslide-parser';
 import type { Root, RootContent } from 'mdast';
 import type { RawSlideBlock, ParseMarkdownResult } from '../interfaces/index.js';
 import { isThematicBreak, isHeading } from './lexer.js';
@@ -9,7 +7,7 @@ import { getNodeWeight } from '../utils/index.js';
 
 export function parseMarkdown(markdown: string): ParseMarkdownResult {
   try {
-    const root = unified().use(remarkParse).use(remarkGfm).parse(markdown) as Root;
+    const root = parseMarkdownToAST(markdown);
 
     if (!root.children?.length) {
       return {
