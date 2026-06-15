@@ -50,7 +50,7 @@ function listItemHasImage(node: SlideNode): boolean {
 }
 
 // Render a listItem's text content only
-function renderListItemText(node: SlideNode): string {
+export function renderListItemText(node: SlideNode): string {
   if (node.type === 'image') return '';
   if (node.type === 'text') return sanitizeHtml(node.value ?? '');
   if (node.children) {
