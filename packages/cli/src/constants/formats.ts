@@ -42,4 +42,16 @@ export const themeTypes = [
     hint: 'Colorful gradient bg',
     color: COLORS.magenta,
   },
+  {
+    label: 'Corporate',
+    value: 'corporate',
+    hint: 'Corporate modern look',
+    color: COLORS.blue,
+  },
+  {
+    label: 'Solarized',
+    value: 'solarized',
+    hint: 'Warm editorial layout',
+    color: COLORS.yellow,
+  },
 ];

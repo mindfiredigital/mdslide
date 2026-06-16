@@ -41,9 +41,13 @@ cli.example('  mdslide slides.md -t dark --open      # Manual flags mode (bypass
 
 cli
   .command('compile <input>', 'Compile a Markdown presentation to HTML, PDF, or PPTX')
-  .option('-t, --theme <theme>', 'Theme: light | dark | notion | terminal | gradient')
+  .option(
+    '-t, --theme <theme>',
+    'Theme: light | dark | notion | terminal | gradient | corporate | solarized'
+  )
   .option('-o, --output <file>', 'Output file path  (default: output.<format>)')
   .option('-f, --format <format>', 'Format: html | pdf | pptx  (auto-detected from -o extension)')
+  .option('--pptx-mode <mode>', 'PPTX mode: screenshot | editable (default: screenshot)')
   .option('-i, --interactive', 'Run compile interactively')
   .option('--open', 'Open the output file after compile')
   .option('--strict', 'Exit with error on warnings')
@@ -69,6 +73,7 @@ cli
           output: answers.output,
           format: answers.format as any,
           open: answers.open,
+          pptxMode: answers.pptxMode,
           logLevel,
         });
       }
@@ -81,6 +86,7 @@ cli
       format: opts.format,
       open: opts.open ?? false,
       strict: opts.strict ?? false,
+      pptxMode: opts.pptxMode,
       logLevel,
     });
   });
@@ -166,6 +172,7 @@ cli
   .option('-t, --theme <theme>', 'Theme override')
   .option('-o, --output <file>', 'Output file path')
   .option('-f, --format <format>', 'Output format: html | pdf | pptx')
+  .option('--pptx-mode <mode>', 'PPTX mode: screenshot | editable')
   .option('-i, --interactive', 'Run interactively')
   .option('-w, --watch', 'Start live-reload watch server')
   .option('-p, --port <port>', 'Watch server port  (default: 3500)')
@@ -195,6 +202,7 @@ cli
           output: answers.output,
           format: answers.format as any,
           open: answers.open,
+          pptxMode: answers.pptxMode,
           logLevel,
         });
       }
@@ -215,6 +223,7 @@ cli
         output: opts.output,
         format: opts.format,
         open: opts.open ?? false,
+        pptxMode: opts.pptxMode,
         logLevel,
       });
     }
