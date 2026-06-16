@@ -1,7 +1,10 @@
 {
-  "name": "@mindfiredigital/mdslide-core",
+  "name": "@mindfiredigital/mdslide-parser",
   "version": "0.0.1",
   "private": false,
+  "bin": {
+    "mdslide-parser": "./dist/cli.js"
+  },
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -21,14 +24,13 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@mindfiredigital/mdslide-parser": "workspace:*",
-    "@mindfiredigital/mdslide-shared": "workspace:*",
-    "gray-matter": "^4.0.3",
-    "mdast-util-to-string": "^4.0.0"
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@types/mdast": "^4.0.4",
-    "@types/node": "^25.6.0",
-    "tsup": "^8.0.0"
+    "@types/node": "^25.9.3",
+    "tsup": "^8.5.1"
   }
 }

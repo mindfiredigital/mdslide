@@ -70,6 +70,7 @@ export class Logger {
   }
 
   raw(message: string): void {
+    if (this.level < 1) return;
     console.log(message);
   }
 }

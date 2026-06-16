@@ -7,9 +7,7 @@ export default defineConfig({
   external: [
     'gray-matter',
     'mdast-util-to-string',
-    'remark-gfm',
-    'remark-parse',
-    'unified',
+    '@mindfiredigital/mdslide-parser',
     '@mindfiredigital/mdslide-shared',
   ],
 });
