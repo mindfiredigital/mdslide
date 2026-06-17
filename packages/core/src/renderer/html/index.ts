@@ -82,6 +82,22 @@ export function renderDeck(deck: SlideDeck, options: RenderDeckOptions = {}): st
       border-right: 1px solid rgba(255,255,255,0.15) !important;
     }
 
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin: 1.5rem 0;
+      background: transparent !important;
+    }
+
+    .mermaid svg {
+      max-width: 100% !important;
+      max-height: 55vh !important;
+      height: auto !important;
+    }
+
+    
     @media print {
       @page {
         size: 1920px 1080px;
@@ -153,6 +169,17 @@ ${slidesHtml}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <!-- Mermaid Support -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.documentElement.getAttribute('data-theme') === 'dark' || 
+             document.documentElement.getAttribute('data-theme') === 'terminal' ||
+             document.documentElement.getAttribute('data-theme') === 'gradient'
+             ? 'dark' : 'default'
+    });
+  </script>
   ${script}
 </body>
 </html>`;
