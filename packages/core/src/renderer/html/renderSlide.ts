@@ -1,7 +1,19 @@
 import type { Slide, SlideNode } from '@mindfiredigital/mdslide-shared';
+import katex from 'katex';
 import { renderCodeBlock, renderInlineCode } from './renderCode.js';
 import { renderTable, renderTableRow, renderTableCell } from './renderTable.js';
 import { sanitizeHtml, sanitizeUrl } from '../../utils/index.js';
+
+function renderMath(formula: string, displayMode: boolean): string {
+  try {
+    return katex.renderToString(formula, {
+      displayMode,
+      throwOnError: false,
+    });
+  } catch (err) {
+    return sanitizeHtml(formula);
+  }
+}
 
 // Extract all image node from tree and return them separately
 function extractImages(nodes: SlideNode[]): {
@@ -164,6 +176,12 @@ export function nodeToHtml(node: SlideNode): string {
       // Strip HTML comments and raw HTML nodes
       return '';
 
+    case 'math':
+      return `<div class="math math-display">${renderMath(node.value ?? '', true)}</div>`;
+
+    case 'inlineMath':
+      return `<span class="math math-inline">${renderMath(node.value ?? '', false)}</span>`;
+
     case 'column':
       return childrenToHtml(node);
 
@@ -254,7 +272,15 @@ export function renderSlide(slide: Slide): string {
     contentHtml = slide.content.map(nodeToHtml).join('\n');
   }
 
-  return `<section class="slide" data-type="${slide.type}" data-id="${slide.id}">
+  let bgAttr = '';
+  let bgStyle = '';
+  if (slide.backgroundImage) {
+    const cleanUrl = slide.backgroundImage.replace(/\s+(dark|light)$/i, '').trim();
+    bgAttr = ` data-background-image="${sanitizeHtml(slide.backgroundImage)}"`;
+    bgStyle = ` style="background-image: url('${sanitizeHtml(cleanUrl)}') !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;"`;
+  }
+
+  return `<section class="slide"${bgAttr}${bgStyle} data-type="${slide.type}" data-id="${slide.id}">
   ${titleHtml}
   <div class="slideContent">
     ${contentHtml}
