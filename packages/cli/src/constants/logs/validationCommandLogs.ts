@@ -44,6 +44,7 @@ export const SUPPORTED_LANGS = [
   'sql',
   'yaml',
   'yml',
+  'mermaid',
 ] as const;
 
 export const VALIDATION_MESSAGES = {

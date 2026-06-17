@@ -6,6 +6,10 @@ export function renderCodeBlock(node: SlideNode): string {
   const lang = (node.lang ?? '').toLowerCase();
   const value = node.value ?? '';
 
+  if (lang === 'mermaid') {
+    return `<div class="mermaid">${sanitizeHtml(value)}</div>`;
+  }
+
   if (lang && SUPPORTED_LANGS.includes(lang)) {
     return `<pre class="lineNumbers language-${sanitizeHtml(lang)}"><code class="language-${sanitizeHtml(lang)}">${sanitizeHtml(value)}</code></pre>`;
   }
