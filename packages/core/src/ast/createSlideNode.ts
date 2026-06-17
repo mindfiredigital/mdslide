@@ -23,5 +23,6 @@ export function createSlide(partial: Partial<Slide>): Slide {
     notes: partial.notes,
     title: partial.title,
     layoutOverride: partial.layoutOverride,
+    backgroundImage: partial.backgroundImage,
   };
 }

@@ -27,6 +27,7 @@ export interface Slide {
   content: SlideNode[];
   notes?: string;
   layoutOverride?: string;
+  backgroundImage?: string;
 }
 
 export interface SlideDeck {
