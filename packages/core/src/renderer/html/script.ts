@@ -5,6 +5,56 @@ export const script = `
 
 (function () {
   const slides = document.querySelectorAll('.slide');
+
+  // Adjust font color for slides with background images
+  slides.forEach(function (s) {
+    const bgUrl = s.getAttribute('data-background-image');
+    if (!bgUrl) return;
+
+    const isDarkOverridden = bgUrl.toLowerCase().includes(' dark');
+    const isLightOverridden = bgUrl.toLowerCase().includes(' light');
+
+    if (isDarkOverridden) {
+      s.classList.add('bgImageDark');
+      return;
+    }
+    if (isLightOverridden) {
+      s.classList.add('.bgImageLight');
+      return;
+    }
+
+    const cleanUrl = bgUrl.replace(/\s+(dark|light)$/i, '').trim();
+
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = cleanUrl;
+    img.onload = function () {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1;
+        canvas.height = 1;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, 1, 1);
+        const data = ctx.getImageData(0, 0, 1, 1).data;
+        const r = data[0];
+        const g = data[1];
+        const b = data[2];
+        const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+        if (luminance < 140) {
+          s.classList.add('bgImageDark');
+        } else {
+          s.classList.add('.bgImageLight');
+        }
+      } catch (e) {
+        s.classList.add('bgImageDark');
+      }
+    };
+    img.onerror = function () {
+      s.classList.add('bgImageDark');
+    };
+  });
+
   const progressBar = document.getElementById('progressBar');
   const hudCounter = document.getElementById('dokCounter');
   const btnPrev = document.getElementById('dokPrev');
