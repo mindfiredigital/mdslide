@@ -329,12 +329,12 @@ describe('Slide and Deck Renderer', () => {
   test('nodeToHtml renders math and inlineMath nodes using KaTeX', () => {
     const inlineMath = createSlideNode({ type: 'inlineMath' as any, value: 'c^2 = a^2 + b^2' });
     const htmlInline = nodeToHtml(inlineMath);
-    expect(htmlInline).toContain('class="math math-inline"');
+    expect(htmlInline).toContain('class="math mathInline"');
     expect(htmlInline).toContain('katex');
 
     const blockMath = createSlideNode({ type: 'math' as any, value: '\\sum_{i=1}^n i' });
     const htmlBlock = nodeToHtml(blockMath);
-    expect(htmlBlock).toContain('class="math math-display"');
+    expect(htmlBlock).toContain('class="math mathDisplay"');
     expect(htmlBlock).toContain('katex-display');
   });
 

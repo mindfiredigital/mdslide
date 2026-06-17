@@ -177,10 +177,10 @@ export function nodeToHtml(node: SlideNode): string {
       return '';
 
     case 'math':
-      return `<div class="math math-display">${renderMath(node.value ?? '', true)}</div>`;
+      return `<div class="math mathDisplay">${renderMath(node.value ?? '', true)}</div>`;
 
     case 'inlineMath':
-      return `<span class="math math-inline">${renderMath(node.value ?? '', false)}</span>`;
+      return `<span class="math mathInline">${renderMath(node.value ?? '', false)}</span>`;
 
     case 'column':
       return childrenToHtml(node);
