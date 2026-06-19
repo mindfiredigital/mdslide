@@ -13,6 +13,8 @@ export const presentorWindowCss = `
             gap: 15px;
             box-sizing: border-box;
             overflow: hidden;
+            align-items: stretch;
+            justify-items: stretch;
         }
         .panel {
             border-radius: 10px;
@@ -30,6 +32,7 @@ export const presentorWindowCss = `
             color: #98989d;
             margin-bottom: 10px;
             font-weight: 700;
+            flex-shrink: 0;
         }
         .preview-container {
             flex-grow: 1;

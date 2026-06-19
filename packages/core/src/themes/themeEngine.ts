@@ -537,6 +537,10 @@ body.showDok .dokContainer,
     overflow: visible !important;
     margin: 0 !important;
     position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
   }
 
   .slide {

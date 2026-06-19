@@ -19,7 +19,7 @@ export const script = `
       return;
     }
     if (isLightOverridden) {
-      s.classList.add('.bgImageLight');
+      s.classList.add('bgImageLight');
       return;
     }
 
@@ -44,7 +44,7 @@ export const script = `
         if (luminance < 140) {
           s.classList.add('bgImageDark');
         } else {
-          s.classList.add('.bgImageLight');
+          s.classList.add('bgImageLight');
         }
       } catch (e) {
         s.classList.add('bgImageDark');
@@ -55,6 +55,41 @@ export const script = `
     };
   });
 
+  const deck = document.querySelector('.deck');
+
+  function resizeDeck() {
+    if (!deck) return;
+    
+    if (window.matchMedia('print').matches) {
+      deck.style.transform = 'none';
+      deck.style.position = 'relative';
+      deck.style.left = 'auto';
+      deck.style.top = 'auto';
+      deck.style.marginLeft = '0';
+      deck.style.marginTop = '0';
+      return;
+    }
+
+    const width = 1920;
+    const height = 1080;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    const scale = Math.min(windowWidth / width, windowHeight / height);
+
+    deck.style.transform = 'scale(' + scale + ')';
+    deck.style.position = 'absolute';
+    deck.style.left = '50%';
+    deck.style.top = '50%';
+    deck.style.marginLeft = '-' + (width / 2) + 'px';
+    deck.style.marginTop = '-' + (height / 2) + 'px';
+  }
+
+  window.addEventListener('resize', resizeDeck);
+  window.addEventListener('load', resizeDeck);
+  document.addEventListener('DOMContentLoaded', resizeDeck);
+  resizeDeck();
+
   const progressBar = document.getElementById('progressBar');
   const hudCounter = document.getElementById('dokCounter');
   const btnPrev = document.getElementById('dokPrev');
@@ -64,8 +99,10 @@ export const script = `
 
   let current = 0;
   let presenterWindow = null;
+  let activeFragments = [];
+  let currentFragmentIndex = -1;
 
-  function show(index) {
+  function show(index, direction) {
     slides.forEach(function (s, i) {
       const isCurrent = i === index;
       if (isCurrent) {
@@ -103,6 +140,22 @@ export const script = `
       }
     });
 
+    // Update activeFragments for the current slide
+    const currentSlide = slides[index];
+    if (currentSlide) {
+      activeFragments = Array.from(currentSlide.querySelectorAll('.fragment'));
+      if (direction === 'forward') {
+        activeFragments.forEach(function (f) { f.classList.remove('visible'); });
+        currentFragmentIndex = -1;
+      } else if (direction === 'backward') {
+        activeFragments.forEach(function (f) { f.classList.add('visible'); });
+        currentFragmentIndex = activeFragments.length - 1;
+      } else {
+        activeFragments.forEach(function (f) { f.classList.remove('visible'); });
+        currentFragmentIndex = -1;
+      }
+    }
+
     // Update progress bar width
     if (progressBar && slides.length > 0) {
       const progress = ((index + 1) / slides.length) * 100;
@@ -120,14 +173,38 @@ export const script = `
 
   // Hndler of next slide
   function nextSlide() {
-    current = Math.min(current + 1, slides.length - 1);
-    show(current);
+    if (current < slides.length - 1) {
+      current++;
+      show(current, 'forward');
+    }
   }
 
   // Hndler of previous slide
   function prevSlide() {
-    current = Math.max(current - 1, 0);
-    show(current);
+    if (current > 0) {
+      current--;
+      show(current, 'backward');
+    }
+  }
+
+  function triggerNext() {
+    if (currentFragmentIndex < activeFragments.length - 1) {
+      currentFragmentIndex++;
+      activeFragments[currentFragmentIndex].classList.add('visible');
+      updatePresenterContent();
+    } else {
+      nextSlide();
+    }
+  }
+
+  function triggerPrev() {
+    if (currentFragmentIndex >= 0) {
+      activeFragments[currentFragmentIndex].classList.remove('visible');
+      currentFragmentIndex--;
+      updatePresenterContent();
+    } else {
+      prevSlide();
+    }
   }
 
   // Hndler of the full screen toggle
@@ -153,15 +230,19 @@ export const script = `
       .map(function(el) { return el.outerHTML; })
       .join('\\n');
 
+    const theme = document.documentElement.getAttribute('data-theme') || '';
+
     presenterWindow = window.open('', 'mdslide-presenter-' + Date.now(), 'width=1700,height=800');
     if (!presenterWindow) {
       alert('Pop-up blocked! Please allow pop-ups to open the Presenter View.');
       return;
     }
 
-    presenterWindow.document.write(\`
-    ${presentorWindow}
-\`);
+    const presenterHtml = \`${presentorWindow}\`
+      .replace('<html>', '<html data-theme="' + theme + '">')
+      .replace('$' + '{styles}', styles);
+
+    presenterWindow.document.write(presenterHtml);
     presenterWindow.document.close();
 
     // Call update on open
@@ -184,19 +265,58 @@ export const script = `
       clone.classList.remove('past');
       clone.style.transform = 'none';
       clone.style.opacity = '1';
+      clone.style.position = 'relative';
+
+      // Cloned .slide is normally position:absolute inside .deck.
+      // Force the wrapper to a known 1920x1080 box so it doesn't
+      // collapse to 0 height, and so scalePreviews() has something
+      // real to measure/scale.
+      currentPreview.style.position = 'absolute';
+      currentPreview.style.width = '1920px';
+      currentPreview.style.height = '1080px';
+      currentPreview.style.overflow = 'hidden';
+
       currentPreview.innerHTML = '';
       currentPreview.appendChild(clone);
     }
 
     if (nextPreview) {
+      nextPreview.style.position = 'absolute';
+      nextPreview.style.width = '1920px';
+      nextPreview.style.height = '1080px';
+      nextPreview.style.overflow = 'hidden';
+
       if (nextSlide) {
         const clone = nextSlide.cloneNode(true);
         clone.classList.add('active');
         clone.classList.remove('past');
         clone.style.transform = 'none';
         clone.style.opacity = '1';
+        clone.style.position = 'relative';
         nextPreview.innerHTML = '';
         nextPreview.appendChild(clone);
+
+        // Calculate and apply scaling to cloneContent
+        const cloneContent = clone.querySelector('.slideContent');
+        if (cloneContent) {
+          cloneContent.style.transform = 'none';
+          cloneContent.style.width = '100%';
+          cloneContent.style.transformOrigin = 'top left';
+
+          const slideHeight = clone.clientHeight || 1080;
+          const contentHeight = cloneContent.scrollHeight;
+          const title = clone.querySelector('.slideTitle');
+          const titleHeight = title ? title.clientHeight : 0;
+          const availableHeight = slideHeight - titleHeight - 160;
+
+          if (contentHeight > availableHeight && availableHeight > 0) {
+            const scale = availableHeight / contentHeight;
+            if (scale >= 0.7) {
+              cloneContent.style.transform = 'scale(' + scale + ')';
+              cloneContent.style.width = 100 / scale + '%';
+            }
+          }
+        }
       } else {
         nextPreview.innerHTML = '<div class="no-next">End of Presentation</div>';
       }
@@ -219,9 +339,9 @@ export const script = `
   // Handle messages from presenter window
   window.addEventListener('message', function (e) {
     if (e.data === 'next') {
-      nextSlide();
+      triggerNext();
     } else if (e.data === 'prev') {
-      prevSlide();
+      triggerPrev();
     } else if (e.data === 'togglePresenter') {
       togglePresenterWindow();
     }
@@ -230,9 +350,9 @@ export const script = `
   // Navigation of keyBoard
   document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowRight' || e.key === ' ') {
-      nextSlide();
+      triggerNext();
     } else if (e.key === 'ArrowLeft') {
-      prevSlide();
+      triggerPrev();
     } else if (e.key === 'f') {
       toggleFullscreen();
     } else if (e.key === 'p' || e.key === 'P') {
@@ -241,8 +361,8 @@ export const script = `
   });
 
   // Floating DOK Display Vislibility on Mouse Move
-  if (btnPrev) btnPrev.addEventListener('click', prevSlide);
-  if (btnNext) btnNext.addEventListener('click', nextSlide);
+  if (btnPrev) btnPrev.addEventListener('click', triggerPrev);
+  if (btnNext) btnNext.addEventListener('click', triggerNext);
   if (btnFullscreen) btnFullscreen.addEventListener('click', toggleFullscreen);
   if (btnPresenter) btnPresenter.addEventListener('click', togglePresenterWindow);
 
