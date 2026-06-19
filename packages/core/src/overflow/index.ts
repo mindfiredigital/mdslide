@@ -7,26 +7,40 @@ function calculateNodeHeight(node: SlideNode): number {
 
   if (node.type === 'code') {
     const lines = (node.value || '').split('\n').length;
-    baseHeight = 40 + lines * 16;
+    baseHeight = 50 + lines * 24;
   } else if (node.type === 'table') {
     const rows = node.children ? node.children.length : 0;
-    baseHeight = 20 + rows * 26;
+    baseHeight = 35 + rows * 38;
   } else if (node.type === 'list') {
     baseHeight = 15;
   } else if (node.type === 'listItem') {
     const textLen = extractTextLength(node);
-    const wrapLines = Math.ceil(textLen / 70);
-    baseHeight = Math.max(22, wrapLines * 20);
+    const wrapLines = Math.ceil(textLen / 55);
+    baseHeight = Math.max(30, wrapLines * 30) + 10;
   } else if (node.type === 'image') {
-    baseHeight = 300;
+    baseHeight = 350;
   } else if (node.type === 'blockquote') {
     const textLen = extractTextLength(node);
-    const wrapLines = Math.ceil(textLen / 75);
-    baseHeight = 20 + wrapLines * 20;
+    const wrapLines = Math.ceil(textLen / 65);
+    baseHeight = 25 + wrapLines * 30 + 15;
+  } else if (node.type === 'heading') {
+    const depth = (node as any).depth || 1;
+    const textLen = extractTextLength(node);
+    if (depth === 1) {
+      const wrapLines = Math.ceil(textLen / 40);
+      baseHeight = wrapLines * 65 + 20;
+    } else {
+      const wrapLines = Math.ceil(textLen / 50);
+      baseHeight = wrapLines * 45 + 15;
+    }
+  } else if (node.type === 'paragraph') {
+    const textLen = extractTextLength(node);
+    const wrapLines = Math.ceil(textLen / 65);
+    baseHeight = wrapLines * 30 + 15;
   } else {
     const textLen = extractTextLength(node);
-    const wrapLines = Math.ceil(textLen / 80);
-    baseHeight = wrapLines * 20 + 8;
+    const wrapLines = Math.ceil(textLen / 70);
+    baseHeight = wrapLines * 30 + 10;
   }
 
   if (node.children && node.type !== 'table') {
@@ -40,6 +54,12 @@ function calculateNodeHeight(node: SlideNode): number {
         child.type === 'code' ||
         child.type === 'table'
       ) {
+        if (
+          child.type === 'paragraph' &&
+          (node.type === 'listItem' || node.type === 'blockquote')
+        ) {
+          continue;
+        }
         baseHeight += calculateNodeHeight(child);
       }
     }
@@ -81,6 +101,8 @@ export function processOverflow(slides: Slide[]): Slide[] {
         notes: isContinuation ? undefined : slide.notes,
         layoutOverride: slide.layoutOverride,
         backgroundImage: slide.backgroundImage,
+        titleAlign: slide.titleAlign,
+        titlePosition: slide.titlePosition,
       });
 
       continuationCount++;
@@ -137,7 +159,7 @@ export function processOverflow(slides: Slide[]): Slide[] {
           if (
             fitChildren.length > 0 &&
             splitIndex !== -1 &&
-            children.length - fitChildren.length > 3
+            children.length - fitChildren.length >= 1
           ) {
             remainChildren = children.slice(splitIndex);
             currentSlideContent.push({ ...node, children: fitChildren });
@@ -186,6 +208,8 @@ export function processOverflow(slides: Slide[]): Slide[] {
         notes: isContinuation ? undefined : slide.notes,
         layoutOverride: slide.layoutOverride,
         backgroundImage: slide.backgroundImage,
+        titleAlign: slide.titleAlign,
+        titlePosition: slide.titlePosition,
       });
     }
   }

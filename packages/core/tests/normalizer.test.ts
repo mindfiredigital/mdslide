@@ -4,6 +4,7 @@ import {
   parseLayoutOveride,
   resolveSlideLayout,
   parseBackgroundImage,
+  parseTitlePositioning,
 } from '../src/normalizer/normalizeLayout.ts';
 import { extractSlideNotes } from '../src/normalizer/normalizeNote.ts';
 import {
@@ -63,6 +64,18 @@ describe('Normalize Layout', () => {
     ];
     const { backgroundImage: bg2 } = parseBackgroundImage(nodesWithUrlWrapper);
     expect(bg2).toBe('https://example.com/bg2.png');
+  });
+
+  test('parseTitlePositioning extracts title alignment and vertical positioning comments', () => {
+    const nodes: RootContent[] = [
+      { type: 'html', value: '<!-- titleAlign: center -->' },
+      { type: 'html', value: '<!-- titlePosition: bottom -->' },
+      { type: 'paragraph', children: [{ type: 'text', value: 'Hello' }] },
+    ];
+    const { titleAlign, titlePosition, filteredNodes } = parseTitlePositioning(nodes);
+    expect(titleAlign).toBe('center');
+    expect(titlePosition).toBe('bottom');
+    expect(filteredNodes).toHaveLength(1);
   });
 
   test('resolveSlideLayout returns custom layout if layoutOverride is valid', () => {

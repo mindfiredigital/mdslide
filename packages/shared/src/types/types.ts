@@ -18,6 +18,7 @@ export interface SlideNode {
   url?: string;
   alt?: string;
   header?: boolean;
+  depth?: number;
 }
 
 export interface Slide {
@@ -28,6 +29,8 @@ export interface Slide {
   notes?: string;
   layoutOverride?: string;
   backgroundImage?: string;
+  titleAlign?: string;
+  titlePosition?: string;
 }
 
 export interface SlideDeck {

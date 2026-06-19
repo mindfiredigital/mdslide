@@ -15,9 +15,21 @@ export function renderDeck(deck: SlideDeck, options: RenderDeckOptions = {}): st
   const slidesHtml = deck.slides.map(renderSlide).join('\n');
 
   const isDarkTheme = ['dark', 'terminal', 'gradient'].includes(theme);
-  const prismThemeUrl = isDarkTheme
-    ? 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css'
-    : 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css';
+
+  const urls = {
+    prismCss: isDarkTheme
+      ? 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css'
+      : 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css',
+    prismLineNumbersCss:
+      'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css',
+    katexCss: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css',
+    prismCoreJs: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js',
+    prismAutoloaderJs:
+      'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js',
+    prismLineNumbersJs:
+      'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js',
+    mermaidJs: 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs',
+  };
 
   return `<!DOCTYPE html>
 <html lang="en" data-theme="${sanitizeHtml(theme)}">
@@ -27,9 +39,9 @@ export function renderDeck(deck: SlideDeck, options: RenderDeckOptions = {}): st
   <title>${sanitizeHtml(title)}</title>
   <style id="mdslideBase">${themeEngine.getBaseCSS()}</style>
   <style id="mdslideTheme">${themeEngine.resolveTheme(theme)}</style>
-  <link rel="stylesheet" href="${prismThemeUrl}" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+  <link rel="stylesheet" href="${urls.prismCss}" />
+  <link rel="stylesheet" href="${urls.prismLineNumbersCss}" />
+  <link rel="stylesheet" href="${urls.katexCss}" />
   <style>
     /* Custom Prism overrides to match slide styling perfectly */
     pre[class*="language-"] {
@@ -211,12 +223,12 @@ ${slidesHtml}
     </button>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="${urls.prismCoreJs}"></script>
+  <script src="${urls.prismAutoloaderJs}"></script>
+  <script src="${urls.prismLineNumbersJs}"></script>
   <!-- Mermaid Support -->
   <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    import mermaid from '${urls.mermaidJs}';
     mermaid.initialize({
       startOnLoad: true,
       theme: document.documentElement.getAttribute('data-theme') === 'dark' || 

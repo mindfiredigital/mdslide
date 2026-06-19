@@ -50,7 +50,10 @@ describe('Node and Children Renderer', () => {
     expect(nodeToHtml(bq)).toBe('<blockquote>quote</blockquote>');
 
     const img = createSlideNode({ type: 'image', url: 'foo.png', alt: 'bar' });
-    expect(nodeToHtml(img)).toBe('<img src="foo.png" alt="bar" loading="lazy" />');
+    const imgHtml = nodeToHtml(img);
+    expect(imgHtml).toContain('class="fragment"');
+    expect(imgHtml).toContain('id="frag-');
+    expect(imgHtml).toContain('src="foo.png" alt="bar"');
 
     const link = createSlideNode({
       type: 'link',
@@ -71,7 +74,9 @@ describe('Node and Children Renderer', () => {
         }),
       ],
     });
-    expect(nodeToHtml(ul)).toBe('<ul><li>item</li></ul>');
+    const ulHtml = nodeToHtml(ul);
+    expect(ulHtml).toContain('<li class="fragment" id="frag-');
+    expect(ulHtml).toContain('">item</li>');
 
     const ol = createSlideNode({
       type: 'list',
@@ -83,7 +88,9 @@ describe('Node and Children Renderer', () => {
         }),
       ],
     });
-    expect(nodeToHtml(ol)).toBe('<ol><li>item</li></ol>');
+    const olHtml = nodeToHtml(ol);
+    expect(olHtml).toContain('<li class="fragment" id="frag-');
+    expect(olHtml).toContain('">item</li>');
   });
 
   test('renderCodeBlock generates styled blocks', () => {
@@ -184,7 +191,9 @@ describe('Slide and Deck Renderer', () => {
     expect(html).toContain('<div class="splitLayout">');
     expect(html).toContain('<div class="splitColumn textColumn">');
     expect(html).toContain('<div class="splitColumn imageColumn">');
-    expect(html).toContain('<img src="logo.png" alt="Logo" loading="lazy" />');
+    expect(html).toContain('src="logo.png" alt="Logo"');
+    expect(html).toContain('class="fragment"');
+    expect(html).toContain('id="frag-');
   });
 
   test('renderDeck generates complete template with scripts', () => {
@@ -241,7 +250,10 @@ describe('Slide and Deck Renderer', () => {
         createSlideNode({ type: 'text', value: '   ' }), // whitespace text node
       ],
     });
-    expect(nodeToHtml(node)).toBe('<img src="img.png" alt="" loading="lazy" />');
+    const rendered = nodeToHtml(node);
+    expect(rendered).toContain('src="img.png" alt=""');
+    expect(rendered).toContain('class="fragment"');
+    expect(rendered).toContain('id="frag-');
   });
 
   test('nodeToHtml handles list carrying a nested image', () => {
@@ -267,8 +279,10 @@ describe('Slide and Deck Renderer', () => {
 
     const html = nodeToHtml(listNode);
     expect(html).toContain('<ul>');
-    expect(html).toContain('<li>No image here</li>');
-    expect(html).toContain('<li>With image</li>');
+    expect(html).toContain('class="fragment"');
+    expect(html).toContain('id="frag-');
+    expect(html).toContain('No image here</li>');
+    expect(html).toContain('With image</li>');
     expect(html).toContain('<div class="inlineImageGrid">');
     expect(html).toContain('<img src="nested.png"');
   });
