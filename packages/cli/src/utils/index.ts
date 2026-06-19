@@ -1,6 +1,8 @@
 import { icons } from '../assets/index.js';
 import { STYLES, COLORS } from '../constants/index.js';
 
+export * from './server.js';
+
 export function c(color: string, text: string): string {
   if (!process.stdout.isTTY) return text;
   return `${color}${text}${STYLES.reset}`;

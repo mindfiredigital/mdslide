@@ -4,6 +4,7 @@ import { spawn } from 'child_process';
 import { execFileSync } from 'child_process';
 import { PdfExportOptions } from '../types/index.js';
 import { PDF_CONFIG, PDF_MESSAGES } from '../constants/index.js';
+import { createStaticServer, getFreePort } from '../utils/index.js';
 
 export function findChromeBinary(): string | null {
   for (const bin of PDF_CONFIG.CHROME_CANDIDATES) {
@@ -16,7 +17,7 @@ export function findChromeBinary(): string | null {
 }
 
 export function exportToPdf(
-  htmlPath: string,
+  url: string,
   outputPath: string,
   opts: PdfExportOptions = {}
 ): Promise<void> {
@@ -27,7 +28,7 @@ export function exportToPdf(
     return Promise.reject(new Error(PDF_MESSAGES.CHROME_NOT_FOUND));
   }
 
-  const args = PDF_CONFIG.CHROME_ARGS(outputPath, htmlPath);
+  const args = PDF_CONFIG.CHROME_ARGS(outputPath, url);
 
   return new Promise((resolve, reject) => {
     const child = spawn(chromeBin, args, { stdio: ['ignore', 'ignore', 'pipe'] });
@@ -68,17 +69,23 @@ export async function compileToPdf(
   outputPath: string,
   opts: PdfExportOptions = {}
 ): Promise<void> {
-  const dir = path.dirname(path.resolve(outputPath));
-  const tempPath = path.join(dir, `.mdslide-tmp-${Date.now()}.html`);
+  const baseDir = opts.baseDir ?? path.dirname(path.resolve(outputPath));
+  const port = await getFreePort();
 
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(tempPath, html, 'utf8');
+  const server = createStaticServer(() => html, baseDir);
+
+  await new Promise<void>((resolve, reject) => {
+    server.listen(port, '127.0.0.1', () => resolve());
+    server.once('error', reject);
+  });
+
+  const url = `http://127.0.0.1:${port}/`;
 
   try {
-    await exportToPdf(tempPath, path.resolve(outputPath), opts);
+    await exportToPdf(url, path.resolve(outputPath), opts);
   } finally {
-    try {
-      fs.unlinkSync(tempPath);
-    } catch {}
+    await new Promise<void>((resolve) => {
+      server.close(() => resolve());
+    });
   }
 }
