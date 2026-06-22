@@ -21,9 +21,13 @@ function validateSlides(markdown: string, filePath?: string): ValidationIssue[] 
 
   // 1. Parse Frontmatter
   let frontmatterContent = markdown;
+  let defaultOverflow: string | undefined;
   try {
     const { meta, content } = parseFrontmatter(markdown);
     frontmatterContent = content;
+    if (meta.overflow && typeof meta.overflow === 'string') {
+      defaultOverflow = meta.overflow.toLowerCase();
+    }
 
     // Validate Frontmatter keys
     if (meta.theme !== undefined) {
@@ -86,7 +90,11 @@ function validateSlides(markdown: string, filePath?: string): ValidationIssue[] 
     }
 
     // Used rule limit constant here
-    if (lines.length > VALIDATION_RULES.MAX_LINES_PER_SLIDE) {
+    const hasOverflowSplit =
+      defaultOverflow === 'split' ||
+      lines.some((l) => /^<!--\s*overflow:\s*split\s*-->$/i.test(l.trim()));
+
+    if (!hasOverflowSplit && lines.length > VALIDATION_RULES.MAX_LINES_PER_SLIDE) {
       issues.push({
         type: 'warning',
         slide: slideNo,
