@@ -5,6 +5,7 @@ import {
   resolveSlideLayout,
   parseBackgroundImage,
   parseTitlePositioning,
+  parseOverflowConfig,
 } from '../src/normalizer/normalizeLayout.ts';
 import { extractSlideNotes } from '../src/normalizer/normalizeNote.ts';
 import {
@@ -76,6 +77,17 @@ describe('Normalize Layout', () => {
     expect(titleAlign).toBe('center');
     expect(titlePosition).toBe('bottom');
     expect(filteredNodes).toHaveLength(1);
+  });
+
+  test('parseOverflowConfig extracts overflow comments and filters nodes', () => {
+    const nodes: RootContent[] = [
+      { type: 'html', value: '<!-- overflow: split -->' },
+      { type: 'paragraph', children: [{ type: 'text', value: 'Hello' }] },
+    ];
+    const { overflow, filteredNodes } = parseOverflowConfig(nodes);
+    expect(overflow).toBe('split');
+    expect(filteredNodes).toHaveLength(1);
+    expect(filteredNodes[0].type).toBe('paragraph');
   });
 
   test('resolveSlideLayout returns custom layout if layoutOverride is valid', () => {

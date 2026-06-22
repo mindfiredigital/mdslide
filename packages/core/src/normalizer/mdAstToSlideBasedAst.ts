@@ -10,6 +10,7 @@ import {
   resolveSlideLayout,
   parseBackgroundImage,
   parseTitlePositioning,
+  parseOverflowConfig,
 } from './normalizeLayout.js';
 
 // Converts generic MDAST node into Slide AST Node
@@ -63,10 +64,12 @@ export function normalizeSlide(rawBlock: RawSlideBlock): Slide {
     filteredNodes: nodesWithoutPos,
   } = parseTitlePositioning(nodesWithoutBg);
 
+  const { overflow, filteredNodes: nodesWithoutOverflow } = parseOverflowConfig(nodesWithoutPos);
+
   let slideTitle: string | undefined;
   const slideContent: SlideNode[] = [];
 
-  for (const node of nodesWithoutPos) {
+  for (const node of nodesWithoutOverflow) {
     if (isHeading(node)) {
       const headingNode = node as Heading;
       const normalized = normalizeHeading(headingNode);
@@ -101,6 +104,7 @@ export function normalizeSlide(rawBlock: RawSlideBlock): Slide {
     backgroundImage,
     titleAlign,
     titlePosition,
+    overflow,
   });
 }
 
@@ -126,6 +130,10 @@ export function normalizeSlides(
           } else {
             slide.titlePosition = pos;
           }
+        }
+        const overflow = meta.overflow;
+        if (overflow && !slide.overflow) {
+          slide.overflow = String(overflow).toLowerCase();
         }
       }
       return slide;

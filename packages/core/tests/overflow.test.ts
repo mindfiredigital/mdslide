@@ -29,6 +29,7 @@ describe('Overflow Engine', () => {
     const slide = createSlide({
       id: 'slide-code',
       title: 'Long Code Block',
+      overflow: 'split',
       content: [
         createSlideNode({
           type: 'code',
@@ -61,6 +62,7 @@ describe('Overflow Engine', () => {
     const slide = createSlide({
       id: 'slide-list',
       title: 'Long List',
+      overflow: 'split',
       content: [
         createSlideNode({
           type: 'list',
@@ -97,6 +99,7 @@ describe('Overflow Engine', () => {
     const slide = createSlide({
       id: 'slide-paragraphs',
       title: 'Long Paragraphs',
+      overflow: 'split',
       content: paragraphs,
     });
 
@@ -125,5 +128,75 @@ describe('Overflow Engine', () => {
     expect(result).toHaveLength(1);
     expect(result[0].content).toHaveLength(1);
     expect(result[0].content[0].value).toBe(lines);
+  });
+
+  test('does not split long code block by default', () => {
+    const lines = Array(45).fill('console.log("line");').join('\n');
+    const slide = createSlide({
+      id: 'slide-code-default',
+      title: 'Long Code Block Default',
+      content: [
+        createSlideNode({
+          type: 'code',
+          value: lines,
+        }),
+      ],
+    });
+
+    const result = processOverflow([slide]);
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('slide-code-default');
+  });
+
+  test('does not split long list by default', () => {
+    const listItems = Array(35)
+      .fill(null)
+      .map((_, i) =>
+        createSlideNode({
+          type: 'listItem',
+          children: [createSlideNode({ type: 'text', value: `List item number ${i}` })],
+        })
+      );
+
+    const slide = createSlide({
+      id: 'slide-list-default',
+      title: 'Long List Default',
+      content: [
+        createSlideNode({
+          type: 'list',
+          children: listItems,
+        }),
+      ],
+    });
+
+    const result = processOverflow([slide]);
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('slide-list-default');
+  });
+
+  test('does not split general flat content slide by default', () => {
+    const paragraphs = Array(30)
+      .fill(null)
+      .map((_, i) =>
+        createSlideNode({
+          type: 'paragraph',
+          children: [
+            createSlideNode({
+              type: 'text',
+              value: `This is paragraph number ${i} which has some content text.`,
+            }),
+          ],
+        })
+      );
+
+    const slide = createSlide({
+      id: 'slide-paragraphs-default',
+      title: 'Long Paragraphs Default',
+      content: paragraphs,
+    });
+
+    const result = processOverflow([slide]);
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('slide-paragraphs-default');
   });
 });

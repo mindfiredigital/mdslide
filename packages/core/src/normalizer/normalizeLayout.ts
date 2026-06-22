@@ -95,6 +95,30 @@ export function parseTitlePositioning(nodes: RootContent[]): {
   };
 }
 
+export function parseOverflowConfig(nodes: RootContent[]): {
+  overflow: string | undefined;
+  filteredNodes: RootContent[];
+} {
+  let overflow: string | undefined;
+  const filteredNodes: RootContent[] = [];
+
+  for (const node of nodes) {
+    if (node.type === 'html') {
+      const val = node.value.trim();
+      const overflowMatch = val.match(/^<!--\s*overflow:\s*(\w+)\s*-->$/i);
+      if (overflowMatch) {
+        overflow = overflowMatch[1].toLowerCase();
+        continue;
+      }
+    }
+    filteredNodes.push(node);
+  }
+  return {
+    overflow,
+    filteredNodes,
+  };
+}
+
 export function resolveSlideLayout(
   nodes: SlideNode[],
   hasTitle: boolean,
