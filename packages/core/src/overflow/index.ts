@@ -81,6 +81,11 @@ export function processOverflow(slides: Slide[]): Slide[] {
       continue;
     }
 
+    if (slide.overflow !== 'split') {
+      resultSlides.push(slide);
+      continue;
+    }
+
     let currentSlideContent: SlideNode[] = [];
     let currentHeight = 0;
     let continuationCount = 0;
@@ -103,6 +108,7 @@ export function processOverflow(slides: Slide[]): Slide[] {
         backgroundImage: slide.backgroundImage,
         titleAlign: slide.titleAlign,
         titlePosition: slide.titlePosition,
+        overflow: slide.overflow,
       });
 
       continuationCount++;
@@ -210,6 +216,7 @@ export function processOverflow(slides: Slide[]): Slide[] {
         backgroundImage: slide.backgroundImage,
         titleAlign: slide.titleAlign,
         titlePosition: slide.titlePosition,
+        overflow: slide.overflow,
       });
     }
   }
