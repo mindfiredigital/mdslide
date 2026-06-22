@@ -40,6 +40,7 @@ export const SUPPORTED_LANGS = [
   'sql',
   'yaml',
   'yml',
+  'mermaid',
 ];
 
 export const DEFAULT_TITLE = 'Presentation';

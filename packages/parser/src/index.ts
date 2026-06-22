@@ -1,6 +1,7 @@
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 import type { Root } from 'mdast';
 
 export type ParsedAST = Root & {
@@ -39,7 +40,7 @@ export function stripPositions(node: any): any {
 }
 
 export function parseMarkdownToAST(markdown: string, options?: { clean?: boolean }): ParsedAST {
-  const root = unified().use(remarkParse).use(remarkGfm).parse(markdown) as Root;
+  const root = unified().use(remarkParse).use(remarkGfm).use(remarkMath).parse(markdown) as Root;
 
   // Define clean method on standard Root
   Object.defineProperty(root, 'clean', {

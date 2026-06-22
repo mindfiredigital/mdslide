@@ -11,6 +11,7 @@ export function createSlideNode(partial: Partial<SlideNode> & { type: string }):
     url: partial.url,
     alt: partial.alt,
     header: partial.header,
+    depth: partial.depth,
   };
 }
 
@@ -23,5 +24,8 @@ export function createSlide(partial: Partial<Slide>): Slide {
     notes: partial.notes,
     title: partial.title,
     layoutOverride: partial.layoutOverride,
+    backgroundImage: partial.backgroundImage,
+    titleAlign: partial.titleAlign,
+    titlePosition: partial.titlePosition,
   };
 }

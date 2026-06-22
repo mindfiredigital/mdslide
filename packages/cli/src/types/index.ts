@@ -84,6 +84,7 @@ export interface PdfExportOptions {
   chromePath?: string;
   timeoutMs?: number;
   printBackground?: boolean;
+  baseDir?: string;
 }
 
 export interface ScreenshotPptxOptions {

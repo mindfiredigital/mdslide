@@ -1,69 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import http from 'http';
-import net from 'net';
 import os from 'os';
 import { spawn } from 'child_process';
 import pptxgen from 'pptxgenjs';
 import { findChromeBinary } from './pdfExports.js';
 import { ScreenshotPptxOptions } from '../types/index.js';
-
-function getFreePort(): Promise<number> {
-  return new Promise((resolve, reject) => {
-    const s = net.createServer();
-    s.listen(0, () => {
-      const addr = s.address() as net.AddressInfo;
-      s.close(() => resolve(addr.port));
-    });
-    s.on('error', reject);
-  });
-}
-
-// Local HTTP server for serving slide HTML and its static assets
-function serveHtml(html: string, port: number, baseDir: string): Promise<() => void> {
-  return new Promise((resolve, reject) => {
-    const server = http.createServer((req, res) => {
-      const urlPath = req.url ? req.url.split('?')[0] : '/';
-
-      if (urlPath === '/' || urlPath === '/index.html') {
-        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-        res.end(html);
-        return;
-      }
-
-      // Try serving static files relative to baseDir
-      const filePath = path.join(baseDir, decodeURIComponent(urlPath));
-      fs.stat(filePath, (err, stats) => {
-        if (err || !stats.isFile()) {
-          res.writeHead(404, { 'Content-Type': 'text/plain' });
-          res.end('Not Found');
-          return;
-        }
-
-        let contentType = 'application/octet-stream';
-        const ext = path.extname(filePath).toLowerCase();
-        if (ext === '.css') contentType = 'text/css';
-        else if (ext === '.js') contentType = 'application/javascript';
-        else if (ext === '.json') contentType = 'application/json';
-        else if (ext === '.png') contentType = 'image/png';
-        else if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
-        else if (ext === '.gif') contentType = 'image/gif';
-        else if (ext === '.svg') contentType = 'image/svg+xml';
-        else if (ext === '.woff') contentType = 'font/woff';
-        else if (ext === '.woff2') contentType = 'font/woff2';
-        else if (ext === '.ttf') contentType = 'font/ttf';
-
-        res.writeHead(200, { 'Content-Type': contentType });
-        fs.createReadStream(filePath).pipe(res);
-      });
-    });
-
-    server.listen(port, '127.0.0.1', () => {
-      resolve(() => server.close());
-    });
-    server.once('error', reject);
-  });
-}
+import { createStaticServer, getFreePort } from '../utils/index.js';
 
 function screenshotSlide(
   chromeBin: string,
@@ -82,7 +24,7 @@ function screenshotSlide(
       '--disable-dev-shm-usage',
       '--hide-scrollbars',
       '--run-all-compositor-stages-before-draw',
-      '--virtual-time-budget=5000',
+      '--virtual-time-budget=10000',
       `--window-size=${width},${height}`,
       `--screenshot=${outputPng}`,
       url,
@@ -143,6 +85,10 @@ function injectSlideSelector(html: string): string {
     opacity: 0 !important;
     display: none !important;
   }
+  /* Enforce fragment visibility in screenshots */
+  .fragment {
+    opacity: 1 !important;
+  }
 </style>
 `;
 
@@ -202,16 +148,21 @@ export async function compileToScreenshotPptx(
     } catch {}
   };
 
+  const modifiedHtml = injectSlideSelector(html);
+
+  // Start local HTTP server directly out of system RAM memory
+  const serverPort = await getFreePort();
+  const server = createStaticServer(() => modifiedHtml, opts.baseDir ?? process.cwd());
+
+  await new Promise<void>((resolve, reject) => {
+    server.listen(serverPort, '127.0.0.1', () => resolve());
+    server.once('error', reject);
+  });
+
+  const baseUrl = `http://127.0.0.1:${serverPort}`;
+  const pngPaths: string[] = [];
+
   try {
-    const modifiedHtml = injectSlideSelector(html);
-
-    // Start local HTTP server directly out of system RAM memory
-    const serverPort = await getFreePort();
-    const stopServer = await serveHtml(modifiedHtml, serverPort, opts.baseDir ?? process.cwd());
-    const baseUrl = `http://127.0.0.1:${serverPort}`;
-
-    const pngPaths: string[] = [];
-
     // Screenshot each slide sequentially to avoid CPU/resource overload
     for (let i = 0; i < slideCount; i++) {
       const pngPath = path.join(tmpDir, `slide-${i}.png`);
@@ -220,9 +171,11 @@ export async function compileToScreenshotPptx(
 
       await screenshotSlide(chromeBin, url, pngPath, width, height, timeoutMs);
     }
+  } finally {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
 
-    stopServer();
-
+  try {
     // Build PPTX with screenshots as full-bleed images
     const pptx = new (pptxgen as any)();
     pptx.layout = 'LAYOUT_WIDE';

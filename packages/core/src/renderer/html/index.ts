@@ -15,9 +15,21 @@ export function renderDeck(deck: SlideDeck, options: RenderDeckOptions = {}): st
   const slidesHtml = deck.slides.map(renderSlide).join('\n');
 
   const isDarkTheme = ['dark', 'terminal', 'gradient'].includes(theme);
-  const prismThemeUrl = isDarkTheme
-    ? 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css'
-    : 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css';
+
+  const urls = {
+    prismCss: isDarkTheme
+      ? 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css'
+      : 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css',
+    prismLineNumbersCss:
+      'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css',
+    katexCss: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css',
+    prismCoreJs: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js',
+    prismAutoloaderJs:
+      'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js',
+    prismLineNumbersJs:
+      'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js',
+    mermaidJs: 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs',
+  };
 
   return `<!DOCTYPE html>
 <html lang="en" data-theme="${sanitizeHtml(theme)}">
@@ -27,8 +39,9 @@ export function renderDeck(deck: SlideDeck, options: RenderDeckOptions = {}): st
   <title>${sanitizeHtml(title)}</title>
   <style id="mdslideBase">${themeEngine.getBaseCSS()}</style>
   <style id="mdslideTheme">${themeEngine.resolveTheme(theme)}</style>
-  <link rel="stylesheet" href="${prismThemeUrl}" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+  <link rel="stylesheet" href="${urls.prismCss}" />
+  <link rel="stylesheet" href="${urls.prismLineNumbersCss}" />
+  <link rel="stylesheet" href="${urls.katexCss}" />
   <style>
     /* Custom Prism overrides to match slide styling perfectly */
     pre[class*="language-"] {
@@ -79,6 +92,67 @@ export function renderDeck(deck: SlideDeck, options: RenderDeckOptions = {}): st
     [data-theme="terminal"] .line-numbers-rows,
     [data-theme="gradient"] .line-numbers-rows {
       border-right: 1px solid rgba(255,255,255,0.15) !important;
+    }
+
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin: 1.5rem 0;
+      background: transparent !important;
+    }
+
+    .mermaid svg {
+      max-width: 100% !important;
+      max-height: 55vh !important;
+      height: auto !important;
+    }
+
+    .bgImageDark,
+    .bgImageDark p,
+    .bgImageDark li,
+    .bgImageDark h1,
+    .bgImageDark h2,
+    .bgImageDark h3,
+    .bgImageDark h4,
+    .bgImageDark h5,
+    .bgImageDark h6,
+    .bgImageDark span,
+    .bgImageDark strong,
+    .bgImageDark em,
+    .bgImageDark td,
+    .bgImageDark th {
+      color: #fafafa !important;
+      -webkit-text-fill-color: #fafafa !important;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5) !important;
+    }
+    .bgImageDark blockquote {
+      border-left-color: rgba(255,255,255,0.4) !important;
+      background: rgba(0,0,0,0.3) !important;
+    }
+
+    .bgImageLight,
+    .bgImageLight p,
+    .bgImageLight li,
+    .bgImageLight h1,
+    .bgImageLight h2,
+    .bgImageLight h3,
+    .bgImageLight h4,
+    .bgImageLight h5,
+    .bgImageLight h6,
+    .bgImageLight span,
+    .bgImageLight strong,
+    .bgImageLight em,
+    .bgImageLight td,
+    .bgImageLight th {
+      color: #18181b !important;
+      -webkit-text-fill-color: #18181b !important;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.8) !important;
+    }
+    .bgImageLight blockquote {
+      border-left-color: rgba(0,0,0,0.2) !important;
+      background: rgba(255,255,255,0.3) !important;
     }
 
     @media print {
@@ -149,9 +223,20 @@ ${slidesHtml}
     </button>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="${urls.prismCoreJs}"></script>
+  <script src="${urls.prismAutoloaderJs}"></script>
+  <script src="${urls.prismLineNumbersJs}"></script>
+  <!-- Mermaid Support -->
+  <script type="module">
+    import mermaid from '${urls.mermaidJs}';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.documentElement.getAttribute('data-theme') === 'dark' || 
+             document.documentElement.getAttribute('data-theme') === 'terminal' ||
+             document.documentElement.getAttribute('data-theme') === 'gradient'
+             ? 'dark' : 'default'
+    });
+  </script>
   ${script}
 </body>
 </html>`;

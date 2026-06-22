@@ -1,5 +1,11 @@
 import { describe, test, expect } from 'vitest';
-import { renderDeck, renderSlide, nodeToHtml, childrenToHtml, renderListItemText } from '../src/renderer/html/index.ts';
+import {
+  renderDeck,
+  renderSlide,
+  nodeToHtml,
+  childrenToHtml,
+  renderListItemText,
+} from '../src/renderer/html/index.ts';
 import { renderCodeBlock, renderInlineCode } from '../src/renderer/html/renderCode.ts';
 import { renderTable, renderTableRow, renderTableCell } from '../src/renderer/html/renderTable.ts';
 import { createSlide, createSlideNode } from '../src/ast/createSlideNode.ts';
@@ -7,7 +13,9 @@ import { sanitizeHtml } from '../src/utils/html.ts';
 
 describe('HTML Sanitization', () => {
   test('escapes HTML special characters', () => {
-    expect(sanitizeHtml('<div>Hello & Welcome</div>')).toBe('&lt;div&gt;Hello &amp; Welcome&lt;/div&gt;');
+    expect(sanitizeHtml('<div>Hello & Welcome</div>')).toBe(
+      '&lt;div&gt;Hello &amp; Welcome&lt;/div&gt;'
+    );
   });
 });
 
@@ -42,7 +50,10 @@ describe('Node and Children Renderer', () => {
     expect(nodeToHtml(bq)).toBe('<blockquote>quote</blockquote>');
 
     const img = createSlideNode({ type: 'image', url: 'foo.png', alt: 'bar' });
-    expect(nodeToHtml(img)).toBe('<img src="foo.png" alt="bar" loading="lazy" />');
+    const imgHtml = nodeToHtml(img);
+    expect(imgHtml).toContain('class="fragment"');
+    expect(imgHtml).toContain('id="frag-');
+    expect(imgHtml).toContain('src="foo.png" alt="bar"');
 
     const link = createSlideNode({
       type: 'link',
@@ -63,7 +74,9 @@ describe('Node and Children Renderer', () => {
         }),
       ],
     });
-    expect(nodeToHtml(ul)).toBe('<ul><li>item</li></ul>');
+    const ulHtml = nodeToHtml(ul);
+    expect(ulHtml).toContain('<li class="fragment" id="frag-');
+    expect(ulHtml).toContain('">item</li>');
 
     const ol = createSlideNode({
       type: 'list',
@@ -75,12 +88,16 @@ describe('Node and Children Renderer', () => {
         }),
       ],
     });
-    expect(nodeToHtml(ol)).toBe('<ol><li>item</li></ol>');
+    const olHtml = nodeToHtml(ol);
+    expect(olHtml).toContain('<li class="fragment" id="frag-');
+    expect(olHtml).toContain('">item</li>');
   });
 
   test('renderCodeBlock generates styled blocks', () => {
     const tsNode = createSlideNode({ type: 'code', lang: 'typescript', value: 'const a = 1;' });
-    expect(renderCodeBlock(tsNode)).toBe('<pre class="lineNumbers language-typescript"><code class="language-typescript">const a = 1;</code></pre>');
+    expect(renderCodeBlock(tsNode)).toBe(
+      '<pre class="lineNumbers language-typescript"><code class="language-typescript">const a = 1;</code></pre>'
+    );
 
     const rawNode = createSlideNode({ type: 'code', value: 'raw code' });
     expect(renderCodeBlock(rawNode)).toBe('<pre><code>raw code</code></pre>');
@@ -90,10 +107,18 @@ describe('Node and Children Renderer', () => {
   });
 
   test('renderTable renders table components', () => {
-    const thNode = createSlideNode({ type: 'tableCell', header: true, children: [createSlideNode({ type: 'text', value: 'head' })] });
+    const thNode = createSlideNode({
+      type: 'tableCell',
+      header: true,
+      children: [createSlideNode({ type: 'text', value: 'head' })],
+    });
     expect(renderTableCell(thNode, childrenToHtml)).toBe('<th>head</th>');
 
-    const tdNode = createSlideNode({ type: 'tableCell', header: false, children: [createSlideNode({ type: 'text', value: 'data' })] });
+    const tdNode = createSlideNode({
+      type: 'tableCell',
+      header: false,
+      children: [createSlideNode({ type: 'text', value: 'data' })],
+    });
     expect(renderTableCell(tdNode, childrenToHtml)).toBe('<td>data</td>');
 
     const trNode = createSlideNode({ type: 'tableRow', children: [tdNode] });
@@ -111,7 +136,10 @@ describe('Slide and Deck Renderer', () => {
       type: 'content',
       title: 'Slide Title',
       content: [
-        createSlideNode({ type: 'paragraph', children: [createSlideNode({ type: 'text', value: 'Body content' })] }),
+        createSlideNode({
+          type: 'paragraph',
+          children: [createSlideNode({ type: 'text', value: 'Body content' })],
+        }),
       ],
       notes: 'Speaker Note',
     });
@@ -129,8 +157,14 @@ describe('Slide and Deck Renderer', () => {
       id: 'slide-split',
       type: 'split',
       content: [
-        createSlideNode({ type: 'column', children: [createSlideNode({ type: 'text', value: 'Left Column' })] }),
-        createSlideNode({ type: 'column', children: [createSlideNode({ type: 'text', value: 'Right Column' })] }),
+        createSlideNode({
+          type: 'column',
+          children: [createSlideNode({ type: 'text', value: 'Left Column' })],
+        }),
+        createSlideNode({
+          type: 'column',
+          children: [createSlideNode({ type: 'text', value: 'Right Column' })],
+        }),
       ],
     });
 
@@ -145,7 +179,10 @@ describe('Slide and Deck Renderer', () => {
       id: 'slide-auto-split',
       type: 'split',
       content: [
-        createSlideNode({ type: 'paragraph', children: [createSlideNode({ type: 'text', value: 'Text explanation' })] }),
+        createSlideNode({
+          type: 'paragraph',
+          children: [createSlideNode({ type: 'text', value: 'Text explanation' })],
+        }),
         createSlideNode({ type: 'image', url: 'logo.png', alt: 'Logo' }),
       ],
     });
@@ -154,7 +191,9 @@ describe('Slide and Deck Renderer', () => {
     expect(html).toContain('<div class="splitLayout">');
     expect(html).toContain('<div class="splitColumn textColumn">');
     expect(html).toContain('<div class="splitColumn imageColumn">');
-    expect(html).toContain('<img src="logo.png" alt="Logo" loading="lazy" />');
+    expect(html).toContain('src="logo.png" alt="Logo"');
+    expect(html).toContain('class="fragment"');
+    expect(html).toContain('id="frag-');
   });
 
   test('renderDeck generates complete template with scripts', () => {
@@ -182,10 +221,12 @@ describe('Slide and Deck Renderer', () => {
   test('renderListItemText handles different node types', () => {
     // image node -> ''
     expect(renderListItemText(createSlideNode({ type: 'image', url: 'foo.png' }))).toBe('');
-    
+
     // text node -> escaped value
-    expect(renderListItemText(createSlideNode({ type: 'text', value: 'hello <world>' }))).toBe('hello &lt;world&gt;');
-    
+    expect(renderListItemText(createSlideNode({ type: 'text', value: 'hello <world>' }))).toBe(
+      'hello &lt;world&gt;'
+    );
+
     // children nodes -> join
     const parent = createSlideNode({
       type: 'listItem',
@@ -209,7 +250,10 @@ describe('Slide and Deck Renderer', () => {
         createSlideNode({ type: 'text', value: '   ' }), // whitespace text node
       ],
     });
-    expect(nodeToHtml(node)).toBe('<img src="img.png" alt="" loading="lazy" />');
+    const rendered = nodeToHtml(node);
+    expect(rendered).toContain('src="img.png" alt=""');
+    expect(rendered).toContain('class="fragment"');
+    expect(rendered).toContain('id="frag-');
   });
 
   test('nodeToHtml handles list carrying a nested image', () => {
@@ -235,8 +279,10 @@ describe('Slide and Deck Renderer', () => {
 
     const html = nodeToHtml(listNode);
     expect(html).toContain('<ul>');
-    expect(html).toContain('<li>No image here</li>');
-    expect(html).toContain('<li>With image</li>');
+    expect(html).toContain('class="fragment"');
+    expect(html).toContain('id="frag-');
+    expect(html).toContain('No image here</li>');
+    expect(html).toContain('With image</li>');
     expect(html).toContain('<div class="inlineImageGrid">');
     expect(html).toContain('<img src="nested.png"');
   });
@@ -249,7 +295,11 @@ describe('Slide and Deck Renderer', () => {
         createSlideNode({
           type: 'tableRow',
           children: [
-            createSlideNode({ type: 'tableCell', header: true, children: [createSlideNode({ type: 'text', value: 'H1' })] }),
+            createSlideNode({
+              type: 'tableCell',
+              header: true,
+              children: [createSlideNode({ type: 'text', value: 'H1' })],
+            }),
           ],
         }),
       ],
@@ -288,5 +338,23 @@ describe('Slide and Deck Renderer', () => {
     expect(html).not.toContain('<div class="splitLayout">');
     expect(html).toContain('img1.png');
     expect(html).toContain('img2.png');
+  });
+
+  test('nodeToHtml renders math and inlineMath nodes using KaTeX', () => {
+    const inlineMath = createSlideNode({ type: 'inlineMath' as any, value: 'c^2 = a^2 + b^2' });
+    const htmlInline = nodeToHtml(inlineMath);
+    expect(htmlInline).toContain('class="math mathInline"');
+    expect(htmlInline).toContain('katex');
+
+    const blockMath = createSlideNode({ type: 'math' as any, value: '\\sum_{i=1}^n i' });
+    const htmlBlock = nodeToHtml(blockMath);
+    expect(htmlBlock).toContain('class="math mathDisplay"');
+    expect(htmlBlock).toContain('katex-display');
+  });
+
+  test('nodeToHtml renders mermaid code block as div with class mermaid', () => {
+    const node = createSlideNode({ type: 'code', lang: 'mermaid', value: 'graph TD\nA --> B' });
+    const html = nodeToHtml(node);
+    expect(html).toBe('<div class="mermaid">graph TD\nA --&gt; B</div>');
   });
 });
