@@ -196,9 +196,13 @@ export function nodeToHtml(node: SlideNode, animation?: string): string {
     case 'break':
       return '<br />';
 
-    case 'html':
-      // Strip HTML comments and raw HTML nodes
-      return '';
+    case 'html': {
+      const val = (node.value ?? '').trim();
+      if (val.startsWith('<!--') && val.endsWith('-->')) {
+        return '';
+      }
+      return node.value ?? '';
+    }
 
     case 'math':
       return `<div class="math mathDisplay">${renderMath(node.value ?? '', true)}</div>`;
