@@ -93,7 +93,7 @@ export async function compileCommand(inputFile: string, opts: CompileOptions): P
   } catch (err) {
     spinner.fail();
     log.error(err);
-    process.exit(1);
+    throw err;
   }
 
   try {
@@ -126,7 +126,7 @@ export async function compileCommand(inputFile: string, opts: CompileOptions): P
   } catch (err) {
     spinner.fail();
     log.error(err);
-    process.exit(1);
+    throw err;
   }
 
   spinner.succeed(

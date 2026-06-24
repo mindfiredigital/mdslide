@@ -75,7 +75,7 @@ cli
           open: answers.open,
           pptxMode: answers.pptxMode,
           logLevel,
-        });
+        }).catch(() => process.exit(1));
       }
       return;
     }
@@ -88,7 +88,7 @@ cli
       strict: opts.strict ?? false,
       pptxMode: opts.pptxMode,
       logLevel,
-    });
+    }).catch(() => process.exit(1));
   });
 
 // watch
@@ -162,7 +162,7 @@ cli
         format: answers.format as any,
         open: answers.open,
         logLevel,
-      });
+      }).catch(() => process.exit(1));
     }
   });
 
@@ -204,7 +204,7 @@ cli
           open: answers.open,
           pptxMode: answers.pptxMode,
           logLevel,
-        });
+        }).catch(() => process.exit(1));
       }
       return;
     }
@@ -225,7 +225,7 @@ cli
         open: opts.open ?? false,
         pptxMode: opts.pptxMode,
         logLevel,
-      });
+      }).catch(() => process.exit(1));
     }
   });
 
