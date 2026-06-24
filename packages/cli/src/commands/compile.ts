@@ -8,6 +8,8 @@ import { RELOAD_SCRIPT } from '../script/reloadScript.js';
 import { COMPILE_CONFIG, COMPILE_MESSAGES } from '../constants/index.js';
 import { compileToPdf } from '../exports/pdfExports.js';
 import { compileToScreenshotPptx, compileToEditablePptx } from '../exports/pptxExports.js';
+import type { Compiler as CompilerType, CompileResult } from '@mindfiredigital/mdslide-core';
+import type { Slide } from '@mindfiredigital/mdslide-shared';
 
 // format detection (pdf, pptx, html)
 function detectFormat(
@@ -33,29 +35,35 @@ export async function runCompile(
   opts: CompileOptions,
   log: Logger,
   options?: { injectReload?: boolean }
-): Promise<{ html: string; slideCount: number; warnings: string[]; slides: any[]; meta: any }> {
+): Promise<{
+  html: string;
+  slideCount: number;
+  warnings: string[];
+  slides: Slide[];
+  meta: Record<string, unknown>;
+}> {
   try {
     await fs.promises.access(inputFile);
   } catch {
     throw new InputNotFoundError(inputFile);
   }
 
-  let Compiler: any;
+  let compilerInstance: CompilerType;
   try {
     const core = await import('@mindfiredigital/mdslide-core');
-    Compiler = core.Compiler;
+    compilerInstance = new core.Compiler();
   } catch {
     throw new CompileError(COMPILE_MESSAGES.CORE_NOT_FOUND, {});
   }
 
   const markdown = await fs.promises.readFile(inputFile, 'utf8');
-  let result: any;
+  let result: CompileResult;
 
   try {
-    const compiler = new Compiler();
-    result = compiler.compile(markdown, { theme: opts.theme });
-  } catch (err: any) {
-    throw new CompileError(err.message, { file: inputFile });
+    result = compilerInstance.compile(markdown, { theme: opts.theme });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    throw new CompileError(message, { file: inputFile });
   }
 
   let html: string = result.html;
@@ -66,7 +74,7 @@ export async function runCompile(
   const slides = result.slides ?? [];
   const meta = result.meta ?? {};
   const slideCount = result.slides?.length ?? 0;
-  const warnings = result.warnings ?? [];
+  const warnings = (result as any).warnings ?? [];
 
   return { html, meta, slides, slideCount, warnings };
 }
@@ -86,7 +94,7 @@ export async function compileCommand(inputFile: string, opts: CompileOptions): P
   let html: string;
   let slideCount: number;
   let warnings: string[];
-  let deck: any;
+  let deck: { slides: Slide[]; meta: Record<string, unknown> };
 
   try {
     const compileResult = await runCompile(absInput, opts, log);
