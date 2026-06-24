@@ -354,7 +354,7 @@ describe('CLI Exporter Modules', () => {
               },
               {
                 type: 'column',
-                children: [{ type: 'image', url: 'https://example.com/remote.png' }],
+                children: [{ type: 'image', url: './nonexistent.png' }],
               },
             ],
           },
@@ -397,8 +397,8 @@ describe('CLI Exporter Modules', () => {
                   },
                 ],
               },
-              { type: 'image', url: 'https://example.com/img1.png' },
-              { type: 'image', url: 'https://example.com/img2.png' },
+              { type: 'image', url: './nonexistent.png' },
+              { type: 'image', url: './nonexistent.png' },
             ],
           },
           {

@@ -257,17 +257,16 @@ export function renderSlide(slide: Slide): string {
   let contentHtml = '';
 
   if (slide.type === 'split') {
+    const [leftColumn, rightColumn] = slide.content;
     const isManualSplit =
-      slide.content.length === 2 &&
-      slide.content[0]!.type === 'column' &&
-      slide.content[1]!.type === 'column';
+      slide.content.length === 2 && leftColumn?.type === 'column' && rightColumn?.type === 'column';
 
-    if (isManualSplit) {
+    if (isManualSplit && leftColumn && rightColumn) {
       // Manual ::split::
       contentHtml = `
         <div class="splitLayout">
-          <div class="splitColumn textColumn">${nodeToHtml(slide.content[0]!, slide.animation)}</div>
-          <div class="splitColumn rightColumn">${nodeToHtml(slide.content[1]!, slide.animation)}</div>
+          <div class="splitColumn textColumn">${nodeToHtml(leftColumn, slide.animation)}</div>
+          <div class="splitColumn rightColumn">${nodeToHtml(rightColumn, slide.animation)}</div>
         </div>`;
     } else {
       // Auto-split: only do text+image split when there is EXACTLY one image
