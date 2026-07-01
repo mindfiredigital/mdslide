@@ -1,3 +1,5 @@
+import { GHContributor, GHRelease } from './github';
+
 export interface NavbarProps {
   scrolled: boolean;
   isDark: boolean;
@@ -15,4 +17,13 @@ export interface CommandSeq {
 
 export interface DemoWidgetProps {
   isDark: boolean;
+}
+
+export interface ReleaseCardProps {
+  release: GHRelease;
+  isLatest: boolean;
+}
+
+export interface ContributorCardProps {
+  contributor: GHContributor;
 }
