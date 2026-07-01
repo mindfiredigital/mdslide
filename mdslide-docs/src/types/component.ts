@@ -12,3 +12,7 @@ export interface CommandSeq {
   input: string;
   output: string;
 }
+
+export interface DemoWidgetProps {
+  isDark: boolean;
+}
